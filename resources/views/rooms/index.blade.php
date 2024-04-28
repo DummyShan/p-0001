@@ -26,7 +26,7 @@
                     <p class="text-white">Room:</p>
                 </div>
                 <input type="text" class="w-full bg-white rounded-lg" placeholder="">
-                <label for="description" style="color:white;">Choose Vehicle</label>
+                <label for="description" style="color:white;">Description</label>
                 <select name="description" id="description" class="rounded w-full">
                     <option>
                         Select
