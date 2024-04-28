@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\NewPostAdded;
+use App\Models\Appointment;
 use App\Models\Post;
 use App\Models\Station;
 use App\Models\StationUser;
@@ -23,51 +24,22 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         // abort_unless(Gate::allows('admin_access'), 403);
-        if ($request->fire_type) {
-            $blocks = StationUser::with('posts', 'user')->where('user_id', $request->fire_type)->get();
-            $latests = Post::with('user', 'fire', 'station', 'vehicle')->where('station_id', $request->fire_type)->get();
-            $check = Post::where('station_id', $request->fire_type)->first();
+        $events = [];
 
-            $latestsender = Post::with('user', 'station', 'fire', 'vehicle')->latest()->first();
-            $image = "https://unsplash.it/640/425?image=30";
-            $vehicles = Vehicle::all();
-            // $histories = VehicleHistory::join('vehicles', 'vehicles.id', '=', 'vehicle_history.id')->get();
-            $stations = Station::all();
-            $firetypes = [
-                'Residential',
-                'Warehouse',
-                'Rubbish Fire',
-                'Electric Post Fire',
-                'Structural',
-                'Grass Fire',
-                'Forest Fire'
+        $appointments = Appointment::with(['user'])->where('user_id', Auth::user()->id)->get();
+
+        foreach ($appointments as $appointment) {
+            $events[] = [
+                'title' => $appointment->user->name . ' (' . $appointment->comments . ')',
+                'start' => $appointment->start_time,
+                'end' => $appointment->finish_time,
+                'description' => $appointment->comments,
             ];
-            if ($check !== null) {
-                return view('dashboard', compact('latests', 'latestsender', 'image', 'vehicles', 'stations', 'firetypes', 'blocks'));
-            } else {
-                return redirect()->back()->with('error', 'Station has no reports available');
-            }
-        } else {
-            $blocks = StationUser::with('posts', 'user')->get();
-            $latests = Post::with('user', 'fire', 'station', 'vehicle')->latest()->get();
-
-            $latestsender = Post::with('user', 'station', 'fire', 'vehicle')->latest()->first();
-            $image = "https://unsplash.it/640/425?image=30";
-            $vehicles = Vehicle::all();
-            // $histories = VehicleHistory::join('vehicles', 'vehicles.id', '=', 'vehicle_history.id')->get();
-            $stations = Station::all();
-            $firetypes = [
-                'Residential',
-                'Warehouse',
-                'Rubbish Fire',
-                'Electric Post Fire',
-                'Structural',
-                'Grass Fire',
-                'Forest Fire'
-            ];
-
-            return view('dashboard', compact('latests', 'latestsender', 'image', 'vehicles', 'stations', 'firetypes', 'blocks'));
         }
+        $instructorCount = count($appointments);
+        $instructorScheds = Appointment::where('user_id', Auth::user()->id)->get();
+
+        return view('dashboard', compact('events', 'instructorCount', 'instructorScheds'));
     }
 
     public function indexStation(Request $request)
@@ -193,33 +165,33 @@ class DashboardController extends Controller
         if (isset($userkeys)) {
             foreach ($userkeys as $value) {
                 // if ($value->device_key) {
-                    $data = [
-                        "registration_ids" => [$value->device_key],
-                        "notification" => [
-                            "title" => "New alerts",
-                            "body" => "Update",
-                        ]
-                    ];
-                    $dataString = json_encode($data);
+                $data = [
+                    "registration_ids" => [$value->device_key],
+                    "notification" => [
+                        "title" => "New alerts",
+                        "body" => "Update",
+                    ]
+                ];
+                $dataString = json_encode($data);
 
-                    $headers = [
-                        'Authorization: key=' . $SERVER_API_KEY,
-                        'Content-Type: application/json',
-                    ];
+                $headers = [
+                    'Authorization: key=' . $SERVER_API_KEY,
+                    'Content-Type: application/json',
+                ];
 
-                    $ch = curl_init();
+                $ch = curl_init();
 
-                    curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-                    curl_setopt($ch, CURLOPT_POST, true);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+                curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
 
-                    curl_exec($ch);
+                curl_exec($ch);
 
 
-                    return redirect()->back()->with('success', 'Station Alarmed!');
+                return redirect()->back()->with('success', 'Station Alarmed!');
                 // } else {
                 //     return redirect()->back()->with('success', 'Station is not active');
                 // }

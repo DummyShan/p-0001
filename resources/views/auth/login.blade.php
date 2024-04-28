@@ -1,6 +1,6 @@
 <x-guest-layout>
     <a href="/" class="flex justify-center items-center">
-        <img src="assets/70b0310fbd4fb5c438f53fb71ec9ce6f.png" alt="logo" style="width: 150px; height: 150px">
+        <img src="assets/logotrans.png" alt="logo" style="width: 150px; height: 150px">
     </a>
 
     <!-- Session Status -->

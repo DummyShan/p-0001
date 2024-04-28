@@ -39,11 +39,11 @@ class AuthenticatedSessionController extends Controller
         $user->last_login_at = Carbon::now();
         $user->save();
 
-        $stationUser = StationUser::where('user_id', $user->id)->first();
+        // $stationUser = StationUser::where('user_id', $user->id)->first();
 
-        $station = Station::where('id', $stationUser->station_id)->first();
-        $station->active = 1;
-        $station->save();
+        // $station = Station::where('id', $stationUser->station_id)->first();
+        // $station->active = 1;
+        // $station->save();
 
         return redirect()->intended(RouteServiceProvider::HOME);
     }
@@ -60,11 +60,11 @@ class AuthenticatedSessionController extends Controller
         $user->device_key = null;
         $user->save();
 
-        $stationUser = StationUser::where('user_id', Auth::user()->id)->first();
+        // $stationUser = StationUser::where('user_id', Auth::user()->id)->first();
 
-        $station = Station::where('id', $stationUser->station_id)->first();
-        $station->active = 0;
-        $station->save();
+        // $station = Station::where('id', $stationUser->station_id)->first();
+        // $station->active = 0;
+        // $station->save();
         
         Auth::guard('web')->logout();
 

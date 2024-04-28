@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
 
         \App\Models\User::factory()->create([
             'name' => 'Super Admin',
-            'email' => 'super@admin.com',
+            'email' => 'super@mail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'verification_status' => 'Verified',
@@ -28,8 +28,8 @@ class DatabaseSeeder extends Seeder
             'updated_at' => now()
         ]);
         \App\Models\User::factory()->create([
-            'name' => 'Admin Admin',
-            'email' => 'admin@admin.com',
+            'name' => 'Instructor',
+            'email' => 'instructor@mail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'verification_status' => 'Verified',
@@ -44,10 +44,6 @@ class DatabaseSeeder extends Seeder
             RolesTableSeeder::class,
             PermissionRoleTableSeeder::class,
             RoleUserTableSeeder::class,
-            StationTableSeeder::class,
-            StationUserTableSeeder::class,
-            VehicleTableSeeder::class,
-            IDListTableSeeder::class,
         ]);
     }
 }

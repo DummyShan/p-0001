@@ -5,17 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Vehicle extends Model
+class Appointment extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'platenumber',
+        'start_time',
+        'finish_time',
+        'comments',
+        'user_id',
     ];
 
-    public function history()
+    public function user()
     {
-        return $this->belongsToMany(VehicleHistory::class);
+        return $this->belongsTo(User::class);
     }
 }

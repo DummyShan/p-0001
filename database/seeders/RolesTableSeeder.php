@@ -17,13 +17,13 @@ class RolesTableSeeder extends Seeder
                 'deleted_at' => null,
             ], [
                 'id' => 2,
-                'title' => 'Admin',
+                'title' => 'Instructor',
                 'created_at' => '2019-04-16 08:40:08',
                 'updated_at' => '2019-04-16 08:40:08',
                 'deleted_at' => null,
             ], [
                 'id' => 3,
-                'title' => 'User',
+                'title' => 'Student',
                 'created_at' => '2019-04-16 08:40:08',
                 'updated_at' => '2019-04-16 08:40:08',
                 'deleted_at' => null,

@@ -6,11 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'XUScheduling System') }}</title>
 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
-
+    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core/main.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid/main.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/timegrid/main.css" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -23,9 +25,6 @@
 
             <main class="overflow-y-auto overflow-x-hidden flex-1 bg-gray-200">
                 <div class="container px-6 py-8 mx-auto">
-                    <!-- <h3 class="mb-4 text-3xl font-medium text-gray-700">
-                        {{ $header }}
-                    </h3> -->
 
                     {{ $slot }}
                 </div>
@@ -34,6 +33,7 @@
     </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/laravel-echo/1.15.3/echo.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
 <script>
     const audio = document.getElementById('alertAudio');
     const audioFire = document.getElementById('alertFire');

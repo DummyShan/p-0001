@@ -6,7 +6,7 @@
     <div class="flex items-center justify-center mt-8">
         <div class="flex items-center">
             <img class="h-16 w-16 flex-none rounded-full ring-yellow-600 m-2"
-                src="{{asset('assets/70b0310fbd4fb5c438f53fb71ec9ce6f.png')}}" alt="">
+                src="{{asset('assets/logotranslg.png')}}" alt="">
 
             <!-- <span class="text-white text-2xl mx-2 font-semibold">{{ __('Dashboard') }}</span> -->
         </div>
@@ -26,7 +26,7 @@
             {{ __('Dashboard') }}
         </x-nav-link>
 
-        <x-nav-link href="{{ route('locations.index') }}" :active="request()->routeIs('locations.index')">
+        {{-- <x-nav-link href="{{ route('locations.index') }}" :active="request()->routeIs('locations.index')">
             <x-slot name="icon">
                 <svg class="h-5 w-5" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                     stroke-linecap="round" stroke-linejoin="round">
@@ -67,7 +67,7 @@
 
             </x-slot>
             {{ __('Records') }}
-        </x-nav-link>
+        </x-nav-link> --}}
         @can('super_access')
         <x-nav-link href="{{ route('stations.index') }}" :active="request()->routeIs('stations.index')">
             <x-slot name="icon">
