@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::put('profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
 
     Route::get('rooms', [\App\Http\Controllers\RoomController::class, 'index'])->name('rooms.index');
+    Route::post('rooms', [\App\Http\Controllers\RoomController::class, 'store'])->name('rooms.store');
 
     Route::post('/devicetoken', function (Request $request) {
         try {

@@ -73,7 +73,7 @@
         </div>
         <div class="px-20 py-10">
             <div class="flex flex-row justify-between mb-4">
-                <div class="flex-1 mr-10 bg-blue-900 rounded-lg">
+                <div class="flex-1 mr-10 bg-gray-800 rounded-lg">
                     <div class="p-4 h-48">
                         <h4 class="text-white text-2xl mb-4">{{Auth::user()->name}}</h4>
                         <p class="text-white">Total Unit:</p>
@@ -89,13 +89,13 @@
                 <h2 class="text-2xl font-bold text-center py-10">Block Schedule</h2>
             </div>
             <div class="flex flex-row justify-between">
-                <div class="flex-1 mr-10 bg-blue-900 rounded-lg">
+                <div class="flex-1 mr-10 bg-gray-800 rounded-lg">
                     <div class="p-4 h-48">
                         <h4 class="text-white text-2xl mb-4">Juan Dela Cruz</h4>
                         <p class="text-white">Total Unit:</p>
                     </div>
                 </div>
-                <div class="flex-1 bg-blue-900 rounded-lg">
+                <div class="flex-1 bg-gray-800 rounded-lg">
                     <div class="p-4 h-48">
                         <h4 class="text-white text-2xl mb-4">Juan Dela Cruz</h4>
                         <p class="text-white">Total Unit:</p>

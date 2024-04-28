@@ -13,7 +13,7 @@ class CreateRoomRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return \Gate::allows('admin_create');
     }
 
     /**
@@ -25,7 +25,7 @@ class CreateRoomRequest extends FormRequest
     {
         return [
             'name' => 'string',
-            'type' => 'string',
+            'description' => 'string',
         ];
     }
 }

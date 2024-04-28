@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateRoomRequest;
+use App\Models\Rooms;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class RoomController extends Controller
 {
@@ -11,9 +14,11 @@ class RoomController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('rooms.index');
+        abort_unless(Gate::allows('super_access'), 403);
+        $lists = Rooms::where('name', 'LIKE', "%" . $request->search . "%")->orderBy("created_at", "desc")->get(); 
+        return view('rooms.index', compact('lists'));
     }
 
     /**
@@ -32,9 +37,14 @@ class RoomController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateRoomRequest $request)
     {
-        //
+        if($request->validated()){
+            $room = Rooms::create($request->all());
+            $room->save();
+
+            return redirect(route("rooms.index"))->with('success', 'Created Successfully');
+        }
     }
 
     /**

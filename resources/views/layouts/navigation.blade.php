@@ -5,8 +5,8 @@
     class="fixed z-30 inset-y-0 left-0 w-64 transition duration-300 transform bg-gray-900 overflow-y-auto lg:translate-x-0 lg:static lg:inset-0">
     <div class="flex items-center justify-center mt-8">
         <div class="flex items-center">
-            <img class="h-16 w-16 flex-none rounded-full ring-yellow-600 m-2"
-                src="{{asset('assets/logotranslg.png')}}" alt="">
+            <img class="h-16 w-16 flex-none rounded-full ring-yellow-600 m-2" src="{{ asset('assets/logotranslg.png') }}"
+                alt="">
 
             <!-- <span class="text-white text-2xl mx-2 font-semibold">{{ __('Dashboard') }}</span> -->
         </div>
@@ -25,77 +25,35 @@
             </x-slot>
             {{ __('Dashboard') }}
         </x-nav-link>
-
-        {{-- <x-nav-link href="{{ route('locations.index') }}" :active="request()->routeIs('locations.index')">
-            <x-slot name="icon">
-                <svg class="h-5 w-5" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" />
-                    <line x1="18" y1="6" x2="18" y2="6.01" />
-                    <path d="M18 13l-3.5 -5a4 4 0 1 1 7 0l-3.5 5" />
-                    <polyline points="10.5 4.75 9 4 3 7 3 20 9 17 15 20 21 17 21 15" />
-                    <line x1="9" y1="4" x2="9" y2="17" />
-                    <line x1="15" y1="15" x2="15" y2="20" />
-                </svg>
-            </x-slot>
-            {{ __('Location') }}
-        </x-nav-link>
-
-        <x-nav-link href="{{ route('messages.index') }}" :active="request()->routeIs('messages.index')">
-            <x-slot name="icon">
-                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
-                </svg>
-
-            </x-slot>
-            {{ __('Stations') }}
-        </x-nav-link>
-
-        <x-nav-link href="{{ route('fires.index') }}" :active="request()->routeIs('fires.index')">
-            <x-slot name="icon">
-                <svg class="h-5 w-5" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path stroke="none" d="M0 0h24v24H0z" />
-                    <path d="M3.5 5.5l1.5 1.5l2.5 -2.5" />
-                    <path d="M3.5 11.5l1.5 1.5l2.5 -2.5" />
-                    <path d="M3.5 17.5l1.5 1.5l2.5 -2.5" />
-                    <line x1="11" y1="6" x2="20" y2="6" />
-                    <line x1="11" y1="12" x2="20" y2="12" />
-                    <line x1="11" y1="18" x2="20" y2="18" />
-                </svg>
-
-            </x-slot>
-            {{ __('Records') }}
-        </x-nav-link> --}}
         @can('super_access')
-        <x-nav-link href="{{ route('stations.index') }}" :active="request()->routeIs('stations.index')">
+        <x-nav-link href="{{ route('rooms.index') }}" :active="request()->routeIs('locations.index')">
             <x-slot name="icon">
-                <svg class="h-5 w-5 text-white" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                <svg class="h-6 w-6 text-white" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
                     stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <path stroke="none" d="M0 0h24v24H0z" />
-                    <path
-                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    <circle cx="12" cy="12" r="3" />
+                    <path d="M3 21v-13l9-4l9 4v13" />
+                    <path d="M13 13h4v8h-10v-6h6" />
+                    <path d="M13 21v-9a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v3" />
                 </svg>
             </x-slot>
-            {{ __('Stations') }}
+            {{ __('Rooms') }}
         </x-nav-link>
         @endcan
-        @can('super_access')
-        <x-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.index')">
-            <x-slot name="icon">
-                <svg class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                </svg>
-            </x-slot>
-            {{ __('Users') }}
-        </x-nav-link>
-        @endcan
+
+        {{-- @can('super_access')
+            <x-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.index')">
+                <x-slot name="icon">
+                    <svg class="h-6 w-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                </x-slot>
+                {{ __('Users') }}
+            </x-nav-link>
+        @endcan --}}
 
         <!-- <x-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.index')">
             <x-slot name="icon">

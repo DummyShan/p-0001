@@ -21,68 +21,63 @@
     <div class="flex">
         <div class="w-2/5">
             <div class="bg-gray-800 p-4 rounded-lg h-500">
-                <p class="text-white text-2xl">Room Form</p>
-                <div class="mt-10 mb-5">
-                    <p class="text-white">Room:</p>
-                </div>
-                <input type="text" class="w-full bg-white rounded-lg" placeholder="">
-                <label for="description" style="color:white;">Description</label>
-                <select name="description" id="description" class="rounded w-full">
-                    <option>
-                        Select
-                    </option>
-                    {{-- @foreach ($vehicles as $vehicle)
-                        <option value="{{ $vehicle->id }}">
-                            {{ $vehicle->name }}
+                <form action="{{ route('rooms.store') }}" method="POST">
+                    @csrf
+                    <p class="text-white text-2xl">Room Form</p>
+                    <div class="mt-10">
+                        <p class="text-white">Room:</p>
+                    </div>
+                    <input type="text" name="name" class="w-full bg-white rounded-lg mb-5" placeholder="">
+                    <label for="description" style="color:white;">Description</label>
+                    <select name="description" id="description" class="rounded w-full">
+                        <option>
+                            Select
                         </option>
-                    @endforeach --}}
-                </select>
-                <div class="mt-4">
-                    <button class="bg-blue-500 text-white px-4 py-2 rounded-md mr-4 w-1/5">Save</button>
-                    <button class="px-4 py-2 rounded-md w-1/5">Cancel</button>
-                </div>
+                        <option value="lab">
+                            Lab
+                        </option>
+                        <option value="lecture">
+                            Lecture
+                        </option>
+                    </select>
+                    <div class="mt-4">
+                        <button type="submit"
+                            class="bg-blue-500 text-white px-4 py-2 rounded-md mr-4 w-1/5">Save</button>
+                        <button type="reset" class="px-4 py-2 rounded-md w-1/5 text-white hover:bg-red-800">Cancel</button>
+                    </div>
+                </form>
             </div>
         </div>
         <div class="w-3/5 ml-4">
             <div class="bg-gray-800 p-4 rounded-lg ml-10">
                 <p class="text-white text-2xl">Room List</p>
                 <div class="mt-10">
-                    <div class="flex items-center bg-white rounded-lg p-2">
-                        <span class="text-gray-400">
-                            <svg class="h-6 w-6 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <circle cx="11" cy="11" r="8" />
-                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                            </svg>
-                        </span>
-                        <input type="text" class="w-full bg-transparent focus:outline-none mx-2 rounded-lg"
-                            placeholder="Search">
-                    </div>
+                    <form action="{{ route('rooms.index') }}" method="GET">
+                        <div class="flex items-center bg-white rounded-lg p-2">
+                            @csrf
+                            <button type="submit">
+                                <svg class="h-6 w-6 text-blue-500 hover:text-blue-800" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                                </svg>
+                            </button>
+                            <input type="search" name="search"
+                                class="w-full bg-transparent focus:outline-none mx-2 rounded-lg" placeholder="Search">
+                        </div>
+                    </form>
                 </div>
-                <div class="bg-white rounded-lg p-4 mt-4">
-                    <div>
-                        <p class="font-bold">Room:</p>
+                @foreach ($lists as $list)
+                    <div class="bg-white rounded-lg p-4 mt-4">
+                        <div>
+                            <p class="font-bold">Room: {{ $list->name }}</p>
+                        </div>
+                        <div>
+                            <p class="font-bold">Description: {{ $list->description }}</p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="font-bold">Description:</p>
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg p-4 mt-4">
-                    <div>
-                        <p class="font-bold">Room:</p>
-                    </div>
-                    <div>
-                        <p class="font-bold">Description:</p>
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg p-4 mt-4">
-                    <div>
-                        <p class="font-bold">Room:</p>
-                    </div>
-                    <div>
-                        <p class="font-bold">Description:</p>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>
