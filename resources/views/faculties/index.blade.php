@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        {{ __('Rooms') }}
+        {{ __('Faculty') }}
     </x-slot>
     @if (session()->has('success'))
         <div class="alert alert-success">
@@ -21,26 +21,33 @@
     <div class="flex">
         <div class="w-2/5">
             <div class="bg-gray-800 p-4 rounded-lg h-500">
-                <form action="{{ route('rooms.store') }}" method="POST">
+                <form action="{{ route('faculty.store') }}" method="POST">
                     @csrf
-                    <p class="text-white text-2xl">Room Form</p>
+                    <p class="text-white text-2xl">Faculty Form</p>
                     <div class="mt-10 mb-5">
-                        <p class="text-white">Room:</p>
-                        <input type="text" name="name" class="w-full bg-white rounded-lg" placeholder="">
-                    </div>
-                    <div class="mb-5">
-                        <label for="description" style="color:white;">Description</label>
-                        <select name="description" id="description" class="rounded w-full">
+                        <label for="user_id" class="text-white">Faculty</label>
+                        <select name="user_id" id="user_id" class="rounded w-full">
                             <option>
                                 Select
                             </option>
-                            <option value="lab">
-                                Lab
-                            </option>
-                            <option value="lecture">
-                                Lecture
-                            </option>
+                            @foreach ($users as $user)
+                                <option value="{{$user->id}}">
+                                    {{ $user->name }}
+                                </option>
+                            @endforeach
                         </select>
+                    </div>
+                    <div class="mt-5 mb-5">
+                        <p class="text-white">ID No.:</p>
+                        <input type="text" name="idNo" class="w-full bg-white rounded-lg" placeholder="">
+                    </div>
+                    <div class="mt-5 mb-5">
+                        <p class="text-white">Email:</p>
+                        <input type="email" name="email" class="w-full bg-white rounded-lg" placeholder="">
+                    </div>
+                    <div class="mt-5 mb-5">
+                        <p class="text-white">Contact:</p>
+                        <input type="number" name="contact" class="w-full bg-white rounded-lg" placeholder="">
                     </div>
                     <div class="mt-4">
                         <button type="submit"
@@ -53,9 +60,9 @@
         </div>
         <div class="w-3/5 ml-4">
             <div class="bg-gray-800 p-4 rounded-lg ml-10">
-                <p class="text-white text-2xl">Room List</p>
+                <p class="text-white text-2xl">Faculty List</p>
                 <div class="mt-10">
-                    <form action="{{ route('rooms.index') }}" method="GET">
+                    <form action="{{ route('faculty.index') }}" method="GET">
                         <div class="flex items-center bg-white rounded-lg p-2">
                             @csrf
                             <button type="submit">
@@ -71,16 +78,24 @@
                         </div>
                     </form>
                 </div>
-                @foreach ($lists as $list)
-                    <div class="bg-white rounded-lg p-4 mt-4">
-                        <div>
-                            <p class="font-bold">Room: {{ $list->name }}</p>
+                <div class="overflow-y-auto">
+                    @foreach ($lists as $list)
+                        <div class="bg-white rounded-lg p-4 mt-4">
+                            <div>
+                                <p class="font-bold">Name: {{ $list->name }}</p>
+                            </div>
+                            <div>
+                                <p class="font-bold">ID No.: {{ $list->idNo }}</p>
+                            </div>
+                            <div>
+                                <p class="font-bold">Email: {{ $list->email }}</p>
+                            </div>
+                            <div>
+                                <p class="font-bold">Contact: {{ $list->contact }}</p>
+                            </div>
                         </div>
-                        <div>
-                            <p class="font-bold">Description: {{ $list->description }}</p>
-                        </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
         </div>
     </div>

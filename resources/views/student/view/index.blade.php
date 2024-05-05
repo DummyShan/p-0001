@@ -1,13 +1,21 @@
 <x-app-layout>
-    <x-slot name="header">
-        {{ __('Dashboard') }}
+    <!-- <x-slot name="header">
+        {{ __('COGON STATION:') }}
     </x-slot>
 
-    {{-- <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 border-b border-gray-200">
             {{ __('You are logged in!') }}
         </div>
-    </div> --}}
+    </div> -->
+    <audio id="alertAudio">
+        <source src="{{ asset('assets/alarm.mp3') }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <audio id="alertFire">
+        <source src="{{ asset('assets/fire-alarm.mp3') }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
     @if (session()->has('success'))
         <script>
             alertFire.play();
@@ -46,65 +54,16 @@
     @can('user_access')
         <div class="flex">
             <div class="pr-10">
-                <select name="semester" onchange="selectSemester(this.value)"
-                    class="w-32 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    placeholder="Semester">
-                    <option value="1st" {{ request()->query('semester') == '1st' ? 'selected' : '' }}>1st Sem</option>
-                    <option value="2nd" {{ request()->query('semester') == '2nd' ? 'selected' : '' }}>2nd Sem</option>
-                </select>
-            </div>
-
-            <div>
-                <select name="year" onchange="selectYear(this.value)"
-                    class="w-32 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    placeholder="School Year">
-                    <option value="1">First Year</option>
-                    <option value="2">Second Year</option>
-                </select>
-            </div>
-        </div>
-        <div class="px-20 py-10">
-            <div class="flex flex-row justify-between mb-4">
-                <div class="flex-1 mr-10 bg-gray-800 rounded-lg shadow-xl">
-                    <div class="p-4 h-48">
-                        <h4 class="text-white text-2xl mb-4">{{ Auth::user()->name }}</h4>
-                        <p class="text-white">Total Unit: {{$counts}}</p>
-                    </div>
-                </div>
-                <div class="flex-1 bg-white rounded-lg flex items-center justify-center shadow-xl hover:shadow-2xl">
-                    <div class="p-4">
-                        <a href="/subject" class="text-center hover:text-red-700">Click here to produce schedule</a>
-                    </div>
-                </div>
-            </div>
-            <div class="border-b-2 border-black mb-4">
-                <h2 class="text-2xl font-bold text-center py-10">Block Schedule</h2>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                @foreach ($schedules as $schedule)
-                    <div class="m-4 bg-gray-800 rounded-lg shadow-xl hover:shadow-2xl">
-                        <div class="p-4 h-48">
-                            <h4 class="text-white text-2xl mb-4">{{ $schedule->type }} {{ $schedule->year }}</h4>
-                            <p class="text-white">{{ $schedule->semester }} Semester</p>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        </div>
-    @endcan
-    @can('admin_access')
-        <div class="flex">
-            <div class="pr-10">
-                <select onchange="selectSemester(this.value)"
+                <select
                     class="w-36 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                     placeholder="Semester">
-                    <option value="1" {{ request()->query('semester') == '1st' ? 'selected' : '' }}>1st Sem</option>
-                    <option value="2" {{ request()->query('semester') == '2nd' ? 'selected' : '' }}>2nd Sem</option>
+                    <option value="1">1st Sem</option>
+                    <option value="2">2nd Sem</option>
                 </select>
             </div>
 
             <div>
-                <select onchange="selectYear(this.value)"
+                <select
                     class="w-36 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                     placeholder="School Year">
                     <option value="2024">2024</option>
@@ -115,22 +74,20 @@
         <div class="flex" style="padding-top: 10px; height: 100%;">
             <div class="w-2/5">
                 <div class="w-full bg-gray-800 rounded-lg p-4">
-                    <p class="text-white text-xl">{{ Auth::user()->name }}</p>
-                    <p class="text-white text-small mt-6">Total Handled Hours: 8 Hours</p>
-                    <p class="text-white text-small">Total Handled Subject: {{ $instructorCount }}</p>
+                    <p class="text-white text-xl mb-4">{{ Auth::user()->name }}</p>
+                    <p class="text-white text-small">Total Units: </p>
                 </div>
                 <div class="h-10"></div>
                 <div class="h-1/2 bg-gray-800 rounded-lg">
                     <p class="text-white p-4">Instructor's Load List</p>
                     <div class=" overflow-y-auto bg-gray-800 rounded-lg">
-                        @foreach ($appointments as $appointment)
+                        @foreach ($schedules as $schedule)
                             <div class="bg-white m-4 rounded-lg p-4 mb-2">
-                                <div>{{ $appointment->type }} {{ $appointment->year }}</div>
-                                <div class="text-xs">{{ $appointment->subject }}</div>
-                                <div class="text-xs">{{ date('g:i A', strtotime($appointment->start)) }} -
-                                    {{ date('g:i A', strtotime($appointment->end)) }}</div>
-                                <div class="text-xs">{{ $appointment->day }}</div>
-                                <div class="text-xs">{{ $appointment->room }}</div>
+                                <div>{{ $schedule->roomType }} {{ $schedule->year }}</div>
+                                <div class="text-xs">{{ $schedule->code }}
+                                    {{ date('g:i A', strtotime($schedule->start)) }} -
+                                    {{ date('g:i A', strtotime($schedule->finish)) }}</div>
+                                <div class="text-xs">{{ $schedule->instructorName }}</div>
                             </div>
                         @endforeach
                     </div>
@@ -169,8 +126,7 @@
             },
             success: function(data) {
                 var link = window.location.search
-                window.location.href = link == '' ? "dashboard?_token={{ csrf_token() }}&semester=" +
-                    semester : link + "&semester=" + semester
+                window.location.href = link == '' ? "dashboard?_token={{ csrf_token() }}&semester=" + semester : link+"&semester="+semester
             },
             error: function(xhr) {
                 // Handle the error response, if needed
@@ -178,7 +134,6 @@
             }
         });
     }
-
     function selectYear(year) {
         $.ajax({
             type: 'GET',
@@ -189,8 +144,7 @@
             },
             success: function(data) {
                 var link = window.location.search
-                window.location.href = link == '' ? "dashboard?_token={{ csrf_token() }}&year=" + year :
-                    link + "&year=" + year
+                window.location.href = link == '' ? "dashboard?_token={{ csrf_token() }}&year=" + year : link+"&year="+year
             },
             error: function(xhr) {
                 // Handle the error response, if needed

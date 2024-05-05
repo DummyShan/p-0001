@@ -99,7 +99,6 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|max:255|confirmed',
-            'selfie' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         try {
             DB::beginTransaction();
@@ -110,7 +109,6 @@ class AuthController extends Controller
                     'password' => bcrypt($validatedData['password']),
                     'phone_number' => $request->phone_number,
                     'age' => $request->age,
-                    'id_type' => $request->id_type,
                 ]);
                 $user->save();
                 $user->roles()->sync(3);
@@ -122,26 +120,6 @@ class AuthController extends Controller
                 //     'message' => "Email verification sent to your email."
                 // ], 200);
 
-                /* This code block checks if the request contains a file with the key 'id_image'. If it
-                does, it retrieves the file using `->file('id_image')` and generates a
-                unique image name using the current timestamp and the original file extension. It
-                then moves the file to the 'uploads' directory using the `move()` method. */
-                if ($request->hasFile('id_image')) {
-                    $image = $request->file('id_image');
-                    $imageName = time() . '.' . $image->getClientOriginalExtension();
-                    $image->move(public_path('uploads'), $imageName);
-
-                    $imageNameSelfie = time() . '.' . $request->selfie->getClientOriginalExtension();
-                    $request->selfie->move(public_path('uploads/selfies'), $imageNameSelfie);
-
-                    $user->verification_id = 'https://fireasecdo-ffdead396a7d.herokuapp.com/uploads/'.$imageName;
-                    $user->avatar = 'https://fireasecdo-ffdead396a7d.herokuapp.com/uploads/selfies/'.$imageNameSelfie;
-                    $user->save();
-
-                    // return response()->json(['success' => true, 'image' => $imageName, 'selfieImage' => $imageNameSelfie]);
-                } else {
-                    return response()->json(['success' => false, 'message' => 'Image not found.']);
-                }
                 DB::commit();
                 return response()->json([
                     'message' => "Registered Successfully"

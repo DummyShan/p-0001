@@ -37,9 +37,6 @@ Route::group(['namespace' => 'App\Http\Controllers\Auth'], function () {
         Route::post('verify-email', 'AuthController@verifyEmail');
     });
 });
-Route::group(['namespace' => 'App\Http\Controllers'], function () {
-    Route::get('idlists', 'IDController@index');
-});
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['namespace' => 'App\Http\Controllers\Auth'], function () {
@@ -52,21 +49,6 @@ Route::group(['middleware' => 'auth:api'], function () {
         return response()->json(['message' => auth()->user()], 200);
     });
     Route::group(['namespace' => 'App\Http\Controllers'], function () {
-        Route::get('stations', 'StationController@listStation');
-
-        //POST
-        Route::post('post/store', 'PostController@store');
-        Route::get('post/user/badge', 'PostController@userBadge')->name('post.badge');
-        // News
-        Route::get('news', 'NewsController@indexJson');
-
-        Route::get('reports', 'PostController@userHistory');
-
-        Route::post('profile/upload', 'UserController@uploadProfile');
-
-        Route::get('aids', 'AidsController@indexJson');
-        Route::get('safety', 'SafetyController@indexJson');
-
-        Route::post('delete', 'UserController@destroy');
+        // 
     });
 });

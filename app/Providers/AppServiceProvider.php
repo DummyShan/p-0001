@@ -30,6 +30,6 @@ class AppServiceProvider extends ServiceProvider
         Passport::refreshTokensExpireIn(now()->addDays(30));
         Passport::personalAccessTokensExpireIn(now()->addMonths(6));
 
-        \URL::forceScheme('https');
+        // \URL::forceScheme('https');
     }
 }

@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
             'updated_at' => now()
         ]);
 
-        \App\Models\User::factory(1)->create();
+        \App\Models\User::factory(10)->create();
 
         $this->call([
             PermissionsTableSeeder::class,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\NewPostAdded;
 use App\Models\Appointment;
 use App\Models\Post;
+use App\Models\Schedule;
 use App\Models\Station;
 use App\Models\StationUser;
 use App\Models\User;
@@ -26,47 +27,67 @@ class DashboardController extends Controller
         // abort_unless(Gate::allows('admin_access'), 403);
         $events = [];
 
-        $appointments = Appointment::with(['user'])->where('user_id', Auth::user()->id)->get();
+        $appointments = Appointment::select(
+            'courses.subject as subject',
+            'courses.subjectCode as code',
+            'courses.time_start as start',
+            'courses.time_end as end',
+            'rooms.name as room',
+            'courses.day as day',
+            'appointments.month_start as m_start',
+            'appointments.month_end as m_end',
+            'courses.subject as subject',
+            'courses.subjectCode as s_code'
+        )->with(['user'])->where('user_id', Auth::user()->id)
+            ->join('courses', 'appointments.course_id', '=', 'courses.id')
+            ->join('rooms', 'courses.room_id', '=', 'rooms.id')
+            // ->where('appointments.semester', 'LIKE', "%" . $request->semester . "%")
+            ->get();
 
-        foreach ($appointments as $appointment) {
-            $events[] = [
-                'title' => $appointment->user->name . ' (' . $appointment->comments . ')',
-                'start' => $appointment->start_time,
-                'end' => $appointment->finish_time,
-                'description' => $appointment->comments,
-            ];
+        for ($day = 1; $day <= 31; $day++) {
+
+            foreach ($appointments as $appointment) {
+                // Extract start date and time from the appointment
+                $startDateTime = $appointment->m_start . '-' . $day . ' ' . $appointment->start . ':00';
+                // dd(date('l', strtotime($startDateTime)));
+                // Extract end date and time from the appointment
+                $endDateTime = $appointment->m_end . '-' . $day . ' ' . $appointment->end . ':00';
+
+                // Check if the appointment falls on a Monday
+                if (date('l', strtotime($startDateTime)) == $appointment->day) {
+                    // Add the event to the events array
+                    $events[] = [
+                        'title' => $appointment->subject,
+                        'start' => $startDateTime,
+                        'end' => $endDateTime,
+                        // 'description' => 'html: <b>' . $appointment->description . '</b>',
+                    ];
+                }
+            }
         }
         $instructorCount = count($appointments);
-        $instructorScheds = Appointment::where('user_id', Auth::user()->id)->get();
+        // $instructorScheds = Appointment::where('user_id', Auth::user()->id)->get();
 
-        return view('dashboard', compact('events', 'instructorCount', 'instructorScheds'));
-    }
-
-    public function indexStation(Request $request)
-    {
-        $blocks = StationUser::with('posts', 'user')->where('user_id', $request->fire_type)->get();
-        $latests = Post::with('user', 'fire', 'station', 'vehicle')->where('station_id', $request->fire_type)->get();
-        $check = Post::where('station_id', $request->fire_type)->first();
-
-        $latestsender = Post::with('user', 'station', 'fire', 'vehicle')->latest()->first();
-        $image = "https://unsplash.it/640/425?image=30";
-        $vehicles = Vehicle::all();
-        // $histories = VehicleHistory::join('vehicles', 'vehicles.id', '=', 'vehicle_history.id')->get();
-        $stations = Station::all();
-        $firetypes = [
-            'Residential',
-            'Warehouse',
-            'Rubbish Fire',
-            'Electric Post Fire',
-            'Structural',
-            'Grass Fire',
-            'Forest Fire'
-        ];
-        if ($check !== null) {
-            return view('dashboard', compact('latests', 'latestsender', 'image', 'vehicles', 'stations', 'firetypes', 'blocks'));
-        } else {
-            return redirect()->back()->with('success', 'Station has no reports available');
+        $schedules = Schedule::join('appointments', 'schedules.appointment_id', '=', 'appointments.id')
+            ->join('users', 'schedules.user_id', '=', 'users.id')
+            ->join('courses', 'appointments.course_id', '=', 'courses.id')
+            ->where('schedules.user_id', '=', Auth::user()->id)
+            // ->where('schedules.semester', '=', '1st')
+            // ->where('schedules.semester', 'LIKE', "%" . $request->semester . "%")
+            // ->where('courses.year', '1')
+            // ->where('courses.year', 'LIKE', "%" . $request->year . "%")
+            ->get();
+        $units = Schedule::select('courses.unit as unit')->join('appointments', 'schedules.appointment_id', '=', 'appointments.id')
+            ->join('courses', 'appointments.course_id', '=', 'courses.id')
+            ->where('schedules.user_id', Auth::user()->id)
+            ->get();
+        $counts = 0;
+        foreach ($units as $unit) {
+            // Count the characters in the unit string
+            $counts = $counts + $unit->unit;
         }
+
+        return view('dashboard', compact('events', 'instructorCount', 'appointments', 'schedules', 'counts'));
     }
 
     /**
@@ -96,26 +117,51 @@ class DashboardController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        $latests = Post::with('user', 'fire', 'station')->where('id', $id)->get();
+        $events = [];
 
-        $latestsender = Post::where('id', $id)->with('user', 'station', 'fire')->latest()->first();
-        $image = "https://unsplash.it/640/425?image=30";
-        $vehicles = Vehicle::all();
-        $histories = VehicleHistory::join('vehicles', 'vehicles.id', '=', 'vehicle_history.id')->get();
-        $stations = Station::all();
-        $firetypes = [
-            'Residential',
-            'Warehouse',
-            'Rubbish Fire',
-            'Electric Post Fire',
-            'Structural',
-            'Grass Fire',
-            'Forest Fire'
-        ];
+        $appointments = Appointment::with(['user'])->where('user_id', Auth::user()->id)
+            ->join('courses', 'appointments.course_id', '=', 'courses.id')
+            ->join('rooms', 'appointments.room_id', '=', 'rooms.id')
+            ->get();
 
-        return view('dashboard', compact('latests', 'latestsender', 'image', 'vehicles', 'histories', 'stations', 'firetypes'));
+        foreach ($appointments as $appointment) {
+            $events[] = [
+                'title' => $appointment->user->name . ' (' . $appointment->comments . ')',
+                'start' => $appointment->start_time,
+                'end' => $appointment->finish_time,
+                'description' => $appointment->comments,
+            ];
+        }
+        $instructorCount = count($appointments);
+        // $instructorScheds = Appointment::where('user_id', Auth::user()->id)->get();
+        $schedules = [];
+        if ($request->semester) {
+            $schedules = Schedule::join('appointments', 'schedules.appointment_id', '=', 'appointments.id')
+                ->join('users', 'schedules.user_id', '=', 'users.id')
+                ->join('courses', 'appointments.course_id', '=', 'courses.id')
+                ->where('schedules.user_id', '=', Auth::user()->id)
+                ->where('schedules.semester', 'LIKE', "%" . $request->semester . "%")
+                ->get();
+        } else if ($request->year) {
+            $schedules = Schedule::join('appointments', 'schedules.appointment_id', '=', 'appointments.id')
+                ->join('users', 'schedules.user_id', '=', 'users.id')
+                ->join('courses', 'appointments.course_id', '=', 'courses.id')
+                ->where('schedules.user_id', '=', Auth::user()->id)
+                ->where('courses.year', 'LIKE', "%" . $request->year . "%")
+                ->get();
+        } else if ($request->semester && $request->year) {
+            $schedules = Schedule::join('appointments', 'schedules.appointment_id', '=', 'appointments.id')
+                ->join('users', 'schedules.user_id', '=', 'users.id')
+                ->join('courses', 'appointments.course_id', '=', 'courses.id')
+                ->where('schedules.user_id', '=', Auth::user()->id)
+                ->where('schedules.semester', 'LIKE', "%" . $request->semester . "%")
+                ->where('courses.year', 'LIKE', "%" . $request->year . "%")
+                ->get();
+        }
+
+        return view('dashboard', compact('events', 'instructorCount', 'appointments', 'schedules'));
     }
 
     /**
