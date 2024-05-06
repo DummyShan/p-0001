@@ -35,6 +35,12 @@
                         <option value="BSCS">
                             BSCS
                         </option>
+                        <option value="BSIS">
+                            BSIS
+                        </option>
+                        <option value="BSEMC">
+                            BSEMC
+                        </option>
                     </select>
                     <div class="mb-2">
                         <p class="text-white">Year:</p>
