@@ -55,15 +55,15 @@ class ScheduleController extends Controller
     {
         try {
             $check = Schedule::where('appointment_id', $request->id)
-                ->where('user_id', Auth::user()->id)->get();
-            if ($check == '') {
+                ->where('user_id', Auth::user()->id)->first();
+            if ($check != '') {
                 redirect(route("subject"))->with('success', 'Subject Already Exist!');
             } else {
                 $appointment = Appointment::where('id', $request->id)->first();
                 $add = new Schedule();
                 $add->user_id = Auth::user()->id;
-                // $add->course_year = $request->course_year;
-                // $add->semester = $appointment->semester;
+                $add->year = $request->year;
+                $add->semester = $request->semester;
                 $add->appointment_id = $appointment->id;
                 $add->save();
 
@@ -77,19 +77,24 @@ class ScheduleController extends Controller
 
     public function subject(Request $request)
     {
-        $subjects = Appointment::select('appointments.id as id', 'courses.subjectCode as code', 'courses.time_start as start', 'courses.time_end as finish', 'courses.description as description')
+        $subjects = Appointment::select('appointments.id as id', 'courses.subjectCode as code', 'courses.time_start as start', 'courses.time_end as finish', 'courses.description as description', 'courses.type as type')
             ->join('courses', 'appointments.course_id', '=', 'courses.id')
             ->join('rooms', 'courses.room_id', '=', 'rooms.id')
             ->join('users', 'appointments.user_id', '=', 'users.id')
+            ->where('courses.type', 'LIKE', "%" . $request->type . "%")
             // ->where('courses.year', 'LIKE', "%" . $request->year . "%")
             // ->where('courses.year', 'LIKE', "%" . $request->search . "%")
             ->get();
+            // dd($subjects);
         $courses = Course::get();
+        if($request->type){
+            $courses = Course::where('courses.type', 'LIKE', "%" . $request->type . "%")->get();
+        }
         $instructor = null;
         if ($request->search) {
             $instructor = Appointment::select('users.name as name', 'courses.day as day', 'courses.status as status', 'rooms.name as roomName')->join('users', 'appointments.user_id', '=', 'users.id')
-                ->join('rooms', 'courses.room_id', 'rooms.id')
                 ->join('courses', 'appointments.course_id', 'courses.id')
+                ->join('rooms', 'courses.room_id', 'rooms.id')
                 ->where('appointments.id', $request->search)
                 ->first();
         }

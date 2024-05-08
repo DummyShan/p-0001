@@ -20,7 +20,7 @@
     @endif
     <div class="flex mb-8">
         <div class="pr-10">
-            <select name="semester" onchange="selectSemester(this.value)"
+            <select name="semester" id="semester"
                 class="w-32 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 placeholder="Semester">
                 <option value="1st" {{ request()->query('semester') == '1st' ? 'selected' : '' }}>1st Sem</option>
@@ -29,16 +29,18 @@
         </div>
 
         <div>
-            <select name="year" onchange="selectYear(this.value)"
+            <select name="year" id="year"
                 class="w-32 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                 placeholder="School Year">
-                <option value="" {{ request()->query('year') == '' ? 'selected' : '' }}>All</option>
+                {{-- <option value="" {{ request()->query('year') == '' ? 'selected' : '' }}>All</option> --}}
                 <option value="1" {{ request()->query('year') == '1' ? 'selected' : '' }}>1st Year</option>
                 <option value="2" {{ request()->query('year') == '2' ? 'selected' : '' }}>2nd Year</option>
+                <option value="3" {{ request()->query('year') == '3' ? 'selected' : '' }}>3rd Year</option>
+                <option value="4" {{ request()->query('year') == '4' ? 'selected' : '' }}>4th Year</option>
             </select>
         </div>
     </div>
-    <div class="grid bg-white rounded">
+    <div class="grid bg-white rounded pb-24">
         <div class="grid w-full">
             <div class="w-full p-4">
                 <p class="text-xl font-semibold">Subjects</p>
@@ -71,7 +73,8 @@
         </div>
         <div class="flex flex-row overflow-x-auto w-full p-4">
             @foreach ($courses as $course)
-                <button class="bg-white rounded-lg w-32 mx-4 p-2 shadow-md hover:shadow-lg border">
+                <button onclick="selectCourse('{{ $course->type }}')"
+                    class="bg-white rounded-lg w-32 mx-4 p-2 shadow-md hover:shadow-lg border">
                     <h2 class="text-xs">{{ $course->type }}</h2>
                 </button>
             @endforeach
@@ -88,6 +91,10 @@
                 </div>
             @endif
         </div>
+        <div class="flex flex-row-reverse">
+            {{-- <div><a href="/student-view" class="text-white bg-blue-800 m-4 p-4 rounded">Edit My Schedule</a></div> --}}
+            <div><a href="/student-view" class="text-white bg-blue-800 m-4 p-4 rounded">View My Schedule</a></div>
+        </div>
     </div>
 
 
@@ -96,7 +103,32 @@
 
 </x-app-layout>
 <script>
+    function selectCourse(id) {
+        console.log(id)
+        let text = "Please Confirm to add the subject\nPress Ok or Cancel.";
+        if (confirm(text) == true) {
+            $.ajax({
+                type: 'GET',
+                url: 'subject',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    type: id,
+                },
+                success: function(data) {
+                    window.location.href = "subject?_token={{ csrf_token() }}&type=" + id
+                },
+                error: function(xhr) {
+                    // Handle the error response, if needed
+                    console.log(xhr);
+                }
+            });
+        }
+    }
+</script>
+<script>
     function addSubject(id) {
+        var semester = document.getElementById("semester");
+        var year = document.getElementById("year");
         let text = "Please Confirm to add the subject\nPress Ok or Cancel.";
         if (confirm(text) == true) {
             $.ajax({
@@ -105,6 +137,8 @@
                 data: {
                     _token: '{{ csrf_token() }}',
                     id: id,
+                    semester: semester.value,
+                    year: year.value,
                 },
                 success: function(data) {
                     window.location.href = "/subject"

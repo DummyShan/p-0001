@@ -90,7 +90,7 @@
             </x-nav-link>
         @endcan
 
-        @can('super_access')
+        {{-- @can('super_access')
             <x-nav-link href="{{ route('block.schedule') }}" :active="request()->routeIs('block.schedule')">
                 <x-slot name="icon">
                     <svg class="h-6 w-6 text-white" width="24" height="24" viewBox="0 0 24 24"
@@ -103,7 +103,7 @@
                 </x-slot>
                 {{ __('Blocking Schedules') }}
             </x-nav-link>
-        @endcan
+        @endcan --}}
 
         {{-- @can('super_access')
             <x-nav-link href="{{ route('student.schedule') }}" :active="request()->routeIs('student.schedule')">

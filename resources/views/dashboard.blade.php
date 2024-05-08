@@ -65,30 +65,17 @@
         </div>
         <div class="px-20 py-10">
             <div class="flex flex-row justify-between mb-4">
-                <div class="flex-1 mr-10 bg-gray-800 rounded-lg shadow-xl">
+                <a href="/student-view" class="flex-1 mr-10 bg-gray-800 rounded-lg shadow-xl">
                     <div class="p-4 h-48">
                         <h4 class="text-white text-2xl mb-4">{{ Auth::user()->name }}</h4>
                         <p class="text-white">Total Unit: {{$counts}}</p>
                     </div>
-                </div>
+                </a>
                 <div class="flex-1 bg-white rounded-lg flex items-center justify-center shadow-xl hover:shadow-2xl">
                     <div class="p-4">
                         <a href="/subject" class="text-center hover:text-red-700">Click here to produce schedule</a>
                     </div>
                 </div>
-            </div>
-            <div class="border-b-2 border-black mb-4">
-                <h2 class="text-2xl font-bold text-center py-10">Block Schedule</h2>
-            </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                @foreach ($schedules as $schedule)
-                    <div class="m-4 bg-gray-800 rounded-lg shadow-xl hover:shadow-2xl">
-                        <div class="p-4 h-48">
-                            <h4 class="text-white text-2xl mb-4">{{ $schedule->type }} {{ $schedule->year }}</h4>
-                            <p class="text-white">{{ $schedule->semester }} Semester</p>
-                        </div>
-                    </div>
-                @endforeach
             </div>
         </div>
     @endcan
@@ -137,7 +124,7 @@
                 </div>
 
             </div>
-            <div class="w-3/5 rounded-lg bg-white ml-4 h-1/2" style="border-radius: 5px;">
+            <div class="w-3/5 rounded-lg bg-white ml-4 overflow-y-auto" style="border-radius: 5px;">
                 <div class="rounded-lg" style="border-radius: 5px;">
                     <div id="calendar" class="p-6"></div>
                 </div>
@@ -152,7 +139,7 @@
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'timeGridWeek',
             slotMinTime: '8:00:00',
-            slotMaxTime: '19:00:00',
+            slotMaxTime: '21:00:00',
             events: @json($events),
         });
         calendar.render();

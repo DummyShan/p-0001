@@ -40,7 +40,7 @@
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'timeGridWeek',
             slotMinTime: '8:00:00',
-            slotMaxTime: '23:00:00',
+            slotMaxTime: '21:00:00',
             events: @json($events),
         });
         calendar.render();

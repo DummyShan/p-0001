@@ -41,11 +41,17 @@ Route::middleware('auth')->group(function () {
 
     Route::get('rooms', [\App\Http\Controllers\RoomController::class, 'index'])->name('rooms.index');
     Route::post('rooms', [\App\Http\Controllers\RoomController::class, 'store'])->name('rooms.store');
+    Route::post('rooms/update', [\App\Http\Controllers\RoomController::class, 'update'])->name('rooms.update');
+    Route::delete('rooms/{id}', [\App\Http\Controllers\RoomController::class, 'destroy'])->name('rooms.delete');
 
     Route::get('faculty', [\App\Http\Controllers\FacultyController::class, 'index'])->name('faculty.index');
     Route::post('faculty', [\App\Http\Controllers\FacultyController::class, 'store'])->name('faculty.store');
+    Route::post('faculty/update', [\App\Http\Controllers\FacultyController::class, 'update'])->name('faculty.update');
+    Route::post('faculty/status', [\App\Http\Controllers\FacultyController::class, 'statusUpdate'])->name('faculty.status');
     Route::get('faculty/schedule', [\App\Http\Controllers\FacultyController::class, 'schedule'])->name('faculty.schedule');
     // Route::get('student/schedule', [\App\Http\Controllers\FacultyController::class, 'studentSchedule'])->name('student.schedule');
+    Route::delete('faculty/{id}', [\App\Http\Controllers\FacultyController::class, 'destroy'])->name('faculty.delete');
+
 
     Route::post('schedule', [\App\Http\Controllers\ScheduleController::class, 'store'])->name('schedule.store');
     Route::post('add-schedule', [\App\Http\Controllers\ScheduleController::class, 'addSchedule'])->name('schedule.add');
@@ -59,6 +65,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('course', [\App\Http\Controllers\CourseController::class, 'index'])->name('course.index');
     Route::post('course', [\App\Http\Controllers\CourseController::class, 'store'])->name('course.store');
+    Route::post('course/update', [\App\Http\Controllers\CourseController::class, 'update'])->name('course.update');
 
     Route::post('/devicetoken', function (Request $request) {
         try {

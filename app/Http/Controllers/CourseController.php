@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateCourseRequest;
+use App\Http\Requests\UpdateCourseRequest;
 use App\Models\Appointment;
 use App\Models\Course;
 use App\Models\Rooms;
@@ -82,9 +83,25 @@ class CourseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $cor = Course::where('id', $request->id)->first();
+        if (isset($cor)) {
+            $cor->type = $request->type;
+            $cor->subject = $request->subject;
+            $cor->subjectCode = $request->subjectCode;
+            // $cor->room_id = $request->room_id;
+            $cor->description = $request->description;
+            $cor->status = $request->status;
+            $cor->unit = $request->unit;
+            // $cor->day = $request->day;
+            $cor->time_start = $request->time_start;
+            $cor->time_end = $request->time_end;
+            $cor->block = $request->block;
+            $cor->update();
+
+            return redirect()->back()->with('success', 'Updated Successfully');
+        }
     }
 
     /**

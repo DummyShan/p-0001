@@ -17,7 +17,7 @@ class RoomController extends Controller
     public function index(Request $request)
     {
         abort_unless(Gate::allows('super_access'), 403);
-        $lists = Rooms::where('name', 'LIKE', "%" . $request->search . "%")->orderBy("created_at", "desc")->get(); 
+        $lists = Rooms::where('name', 'LIKE', "%" . $request->search . "%")->orderBy("created_at", "desc")->get();
         return view('rooms.index', compact('lists'));
     }
 
@@ -39,7 +39,7 @@ class RoomController extends Controller
      */
     public function store(CreateRoomRequest $request)
     {
-        if($request->validated()){
+        if ($request->validated()) {
             $room = Rooms::create($request->all());
             $room->save();
 
@@ -76,9 +76,16 @@ class RoomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $room = Rooms::where('id', $request->id)->first();
+        if (isset($room)) {
+            $room->name = $request->name;
+            $room->description = $request->description;
+            $room->update();
+
+            return redirect()->back()->with('success', 'Updated Successfully');
+        }
     }
 
     /**
@@ -89,6 +96,9 @@ class RoomController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $delete = Rooms::where('id', $id)->first();
+        $delete->delete();
+
+        return redirect()->back()->with('success', 'Deleted Successfully');
     }
 }

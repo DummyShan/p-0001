@@ -32,13 +32,17 @@
                     <span class="mx-2 text-gray-600 text-sm">{{ __('Remember me') }}</span>
                 </label>
             </div>
-
             <div>
-                @if (Route::has('password.request'))
-                    <a class="block text-sm fontme text-red-700 hover:underline"
-                        href="{{ route('password.request') }}">{{ __('Forgot your password?') }}</a>
-                @endif
+                <a class="block text-sm fontme text-red-700 hover:underline"
+                    href="{{ route('register') }}">{{ __('Register') }}</a>
             </div>
+            
+        </div>
+        <div class="float-right mb-4">
+            @if (Route::has('password.request'))
+                <a class="block text-sm fontme text-red-700 hover:underline"
+                    href="{{ route('password.request') }}">{{ __('Forgot your password?') }}</a>
+            @endif
         </div>
 
         <div class="mt-6">

@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
     {
 
         \App\Models\User::factory()->create([
-            'name' => 'Super Admin',
+            'name' => 'Admin',
             'email' => 'super@mail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
@@ -28,8 +28,17 @@ class DatabaseSeeder extends Seeder
             'updated_at' => now()
         ]);
         \App\Models\User::factory()->create([
-            'name' => 'Instructor',
+            'name' => 'Jason Lee',
             'email' => 'instructor@mail.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'verification_status' => 'Verified',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+        \App\Models\User::factory()->create([
+            'name' => 'John Doe',
+            'email' => 'instructor2@mail.com',
             'email_verified_at' => now(),
             'password' => Hash::make('password'),
             'verification_status' => 'Verified',

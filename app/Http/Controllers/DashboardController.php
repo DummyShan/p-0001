@@ -45,38 +45,43 @@ class DashboardController extends Controller
             ->get();
 
         for ($day = 1; $day <= 31; $day++) {
-
+            // Loop through each appointment
             foreach ($appointments as $appointment) {
-                // Extract start date and time from the appointment
-                $startDateTime = $appointment->m_start . '-' . $day . ' ' . $appointment->start . ':00';
-                // dd(date('l', strtotime($startDateTime)));
-                // Extract end date and time from the appointment
-                $endDateTime = $appointment->m_end . '-' . $day . ' ' . $appointment->end . ':00';
+                // Split the days string into an array of individual days
+                $selectedDays = explode(',', $appointment->day);
 
-                // Check if the appointment falls on a Monday
-                if (date('l', strtotime($startDateTime)) == $appointment->day) {
-                    // Add the event to the events array
-                    $events[] = [
-                        'title' => $appointment->subject,
-                        'start' => $startDateTime,
-                        'end' => $endDateTime,
-                        // 'description' => 'html: <b>' . $appointment->description . '</b>',
-                    ];
+                // Loop through each selected day
+                foreach ($selectedDays as $selectedDay) {
+                    // Extract start date and time from the appointment
+                    $startDateTime = $appointment->m_start . '-' . $day . ' ' . $appointment->start . ':00';
+
+                    // Extract end date and time from the appointment
+                    $endDateTime = $appointment->m_end . '-' . $day . ' ' . $appointment->end . ':00';
+
+                    // Check if the appointment falls on the selected day
+                    if (date('l', strtotime($startDateTime)) == $selectedDay) {
+                        // Add the event to the events array
+                        $events[] = [
+                            'title' => $appointment->subject,
+                            'start' => $startDateTime,
+                            'end' => $endDateTime,
+                        ];
+                    }
                 }
             }
         }
         $instructorCount = count($appointments);
         // $instructorScheds = Appointment::where('user_id', Auth::user()->id)->get();
 
-        $schedules = Schedule::join('appointments', 'schedules.appointment_id', '=', 'appointments.id')
-            ->join('users', 'schedules.user_id', '=', 'users.id')
-            ->join('courses', 'appointments.course_id', '=', 'courses.id')
-            ->where('schedules.user_id', '=', Auth::user()->id)
-            // ->where('schedules.semester', '=', '1st')
-            // ->where('schedules.semester', 'LIKE', "%" . $request->semester . "%")
-            // ->where('courses.year', '1')
-            // ->where('courses.year', 'LIKE', "%" . $request->year . "%")
-            ->get();
+        // $schedules = Schedule::join('appointments', 'schedules.appointment_id', '=', 'appointments.id')
+        //     ->join('users', 'schedules.user_id', '=', 'users.id')
+        //     ->join('courses', 'appointments.course_id', '=', 'courses.id')
+        //     ->where('schedules.user_id', '=', Auth::user()->id)
+        //     // ->where('schedules.semester', '=', '1st')
+        //     // ->where('schedules.semester', 'LIKE', "%" . $request->semester . "%")
+        //     // ->where('courses.year', '1')
+        //     // ->where('courses.year', 'LIKE', "%" . $request->year . "%")
+        //     ->get();
         $units = Schedule::select('courses.unit as unit')->join('appointments', 'schedules.appointment_id', '=', 'appointments.id')
             ->join('courses', 'appointments.course_id', '=', 'courses.id')
             ->where('schedules.user_id', Auth::user()->id)
@@ -87,7 +92,7 @@ class DashboardController extends Controller
             $counts = $counts + $unit->unit;
         }
 
-        return view('dashboard', compact('events', 'instructorCount', 'appointments', 'schedules', 'counts'));
+        return view('dashboard', compact('events', 'instructorCount', 'appointments', 'counts'));
     }
 
     /**

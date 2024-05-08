@@ -93,9 +93,27 @@ class FacultyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $fac = Faculty::where('id', $request->id)->first();
+        if (isset($fac)) {
+            $fac->name = $request->name;
+            $fac->idNo = $request->idNo;
+            $fac->email = $request->email;
+            $fac->contact = $request->contact;
+            $fac->update();
+
+            return redirect()->back()->with('success', 'Updated Successfully');
+        }
+    }
+
+    public function statusUpdate(Request $request)
+    {
+        $up = Faculty::where('user_id', $request->id)->first();
+        $up->status = $request->status;
+        $up->update();
+
+        return redirect()->back()->with('success', 'Updated Successfully');
     }
 
     /**
@@ -106,7 +124,10 @@ class FacultyController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $delete = Faculty::where('id', $id)->first();
+        $delete->delete();
+
+        return redirect()->back()->with('success', 'Deleted Successfully');
     }
 
     public function schedule(Request $request)
@@ -123,39 +144,39 @@ class FacultyController extends Controller
             // dd($appointments);
         }
         for ($day = 1; $day <= 31; $day++) {
-
+            // Loop through each appointment
             foreach ($appointments as $appointment) {
-                // Extract start date and time from the appointment
-                $startDateTime = $appointment->month_start .'-'.$day. ' ' . $appointment->time_start . ':00';
-                // dd(date('l', strtotime($startDateTime)));
-                // Extract end date and time from the appointment
-                $endDateTime = $appointment->month_end .'-'.$day. ' ' . $appointment->time_end . ':00';
+                // Split the days string into an array of individual days
+                $selectedDays = explode(',', $appointment->day);
 
-                // Check if the appointment falls on a Monday
-                if (date('l', strtotime($startDateTime)) == $appointment->day) {
-                    // Add the event to the events array
-                    $events[] = [
-                        'title' => $appointment->user_id,
-                        'start' => $startDateTime,
-                        'end' => $endDateTime,
-                        'description' => 'html: <b>' . $appointment->description . '</b>',
-                    ];
+                // Loop through each selected day
+                foreach ($selectedDays as $selectedDay) {
+                    // Extract start date and time from the appointment
+                    $startDateTime = $appointment->month_start . '-' . $day . ' ' . $appointment->time_start . ':00';
+
+                    // Extract end date and time from the appointment
+                    $endDateTime = $appointment->month_end . '-' . $day . ' ' . $appointment->time_end . ':00';
+
+                    // Check if the appointment falls on the selected day
+                    if (date('l', strtotime($startDateTime)) == $selectedDay) {
+                        // Add the event to the events array
+                        $events[] = [
+                            'title' => $appointment->user_id,
+                            'start' => $startDateTime,
+                            'end' => $endDateTime,
+                            'description' => 'html: <b>' . $appointment->description . '</b>',
+                        ];
+                    }
                 }
             }
         }
-        // foreach ($appointments as $appointment) {
-        //     $events[] = [
-        //         'title' => $appointment->user_id,
-        //         'start' => $appointment->month_start .'-05'.' '.$appointment->time_start.':00',
-        //         'end' => $appointment->month_end  .'-05'.' '.$appointment->time_end.':00',
-        //         'description' => 'html: <b>' . $appointment->description . '</b>',
-        //     ];
-        // }
-        $users = User::where('email_verified_at', '!=', null)
+        $users = User::select('users.id as id', 'users.name as name')->where('email_verified_at', '!=', null)
             ->join('role_user', 'users.id', '=', 'role_user.user_id')
             ->join('roles', 'role_user.role_id', '=', 'roles.id')
             ->where('roles.title', '=', 'Instructor')
             ->get();
+
+            // dd($users);
         $rooms = Rooms::all();
         $courses = Course::get();
         return view('faculties.schedule.index', compact('lists', 'events', 'users', 'rooms', 'courses'));
@@ -198,14 +219,48 @@ class FacultyController extends Controller
     public function viewSchedule()
     {
         $events = [];
-        $schedules = Schedule::select('schedules.user_id as studentID', 'appointments.start_time as start', 'appointments.finish_time as finish', 'courses.subjectCode as code', 'courses.year as year', 'rooms.name as roomName', 'rooms.description as roomType', 'users.name as instructorName')
+        $schedules = Schedule::select('schedules.user_id as studentID', 'courses.subject as subject', 'courses.day as day', 'appointments.month_start as m_start', 'appointments.month_end as m_end', 'courses.time_start as start', 'courses.time_end as finish', 'courses.subjectCode as code', 'rooms.name as roomName', 'rooms.description as roomType', 'users.name as studentName')
             ->where('schedules.user_id', Auth::user()->id)
             ->join('appointments', 'schedules.appointment_id', '=', 'appointments.id')
             ->join('users', 'appointments.user_id', '=', 'users.id')
-            ->join('rooms', 'appointments.room_id', '=', 'rooms.id')
             ->join('courses', 'appointments.course_id', 'courses.id')
+            ->join('rooms', 'courses.room_id', '=', 'rooms.id')
             ->get();
-        // dd($schedules);
+        for ($day = 1; $day <= 31; $day++) {
+            // Loop through each schedule
+            foreach ($schedules as $schedule) {
+                // Split the days string into an array of individual days
+                $selectedDays = explode(',', $schedule->day);
+
+                // Loop through each selected day
+                foreach ($selectedDays as $selectedDay) {
+                    // Extract start date and time from the schedule
+                    $startDateTime = $schedule->m_start . '-' . $day . ' ' . $schedule->start . ':00';
+
+                    // Extract end date and time from the schedule
+                    $endDateTime = $schedule->m_end . '-' . $day . ' ' . $schedule->end . ':00';
+
+                    // Check if the schedule falls on the selected day
+                    if (date('l', strtotime($startDateTime)) == $selectedDay) {
+                        // Add the event to the events array
+                        $events[] = [
+                            'title' => $schedule->subject,
+                            'start' => $startDateTime,
+                            'end' => $endDateTime,
+                        ];
+                    }
+                }
+            }
+        }
+        $units = Schedule::select('courses.unit as unit')->join('appointments', 'schedules.appointment_id', '=', 'appointments.id')
+            ->join('courses', 'appointments.course_id', '=', 'courses.id')
+            ->where('schedules.user_id', Auth::user()->id)
+            ->get();
+        $counts = 0;
+        foreach ($units as $unit) {
+            // Count the characters in the unit string
+            $counts = $counts + $unit->unit;
+        }
         foreach ($schedules as $schedule) {
             $events[] = [
                 'title' => $schedule->code . ' (' . $schedule->roomName . ' ' . $schedule->roomType . ')',
@@ -215,6 +270,6 @@ class FacultyController extends Controller
             ];
         }
 
-        return view('student.view.index', compact('events', 'schedules'));
+        return view('student.view.index', compact('events', 'schedules', 'counts'));
     }
 }

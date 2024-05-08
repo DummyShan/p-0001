@@ -1,21 +1,9 @@
 <x-app-layout>
-    <!-- <x-slot name="header">
-        {{ __('COGON STATION:') }}
-    </x-slot>
-
-    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+    {{-- <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 border-b border-gray-200">
             {{ __('You are logged in!') }}
         </div>
-    </div> -->
-    <audio id="alertAudio">
-        <source src="{{ asset('assets/alarm.mp3') }}" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
-    <audio id="alertFire">
-        <source src="{{ asset('assets/fire-alarm.mp3') }}" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+    </div> --}}
     @if (session()->has('success'))
         <script>
             alertFire.play();
@@ -75,11 +63,11 @@
             <div class="w-2/5">
                 <div class="w-full bg-gray-800 rounded-lg p-4">
                     <p class="text-white text-xl mb-4">{{ Auth::user()->name }}</p>
-                    <p class="text-white text-small">Total Units: </p>
+                    <p class="text-white text-small">Total Units: {{$counts}}</p>
                 </div>
                 <div class="h-10"></div>
                 <div class="h-1/2 bg-gray-800 rounded-lg">
-                    <p class="text-white p-4">Instructor's Load List</p>
+                    <p class="text-white p-4">Subject List</p>
                     <div class=" overflow-y-auto bg-gray-800 rounded-lg">
                         @foreach ($schedules as $schedule)
                             <div class="bg-white m-4 rounded-lg p-4 mb-2">
@@ -87,16 +75,16 @@
                                 <div class="text-xs">{{ $schedule->code }}
                                     {{ date('g:i A', strtotime($schedule->start)) }} -
                                     {{ date('g:i A', strtotime($schedule->finish)) }}</div>
-                                <div class="text-xs">{{ $schedule->instructorName }}</div>
+                                <div class="text-xs">{{ $schedule->studentName }}</div>
                             </div>
                         @endforeach
                     </div>
                 </div>
 
             </div>
-            <div class="w-3/5 rounded-lg bg-white ml-4 h-1/2" style="border-radius: 5px;">
+            <div class="w-3/5 rounded-lg bg-white ml-4 h-auto overflow-y-auto" style="border-radius: 5px;">
                 <div class="rounded-lg" style="border-radius: 5px;">
-                    <div id="calendar" class="p-6"></div>
+                    <div id="calendar" class="p-6 h-auto"></div>
                 </div>
             </div>
         </div>

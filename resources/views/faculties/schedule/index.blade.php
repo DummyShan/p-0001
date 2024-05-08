@@ -44,7 +44,7 @@
                                                 Select
                                             </option>
                                             @foreach ($users as $user)
-                                                <option value="{{ $user->user_id }}">
+                                                <option value="{{ $user->user_id }} {{ request()->query('year') == $user->user_id ? 'selected' : '' }}">
                                                     {{ $user->name }}
                                                 </option>
                                             @endforeach
@@ -109,7 +109,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="rounded-lg bg-white ml-4 h-3/4 mt-14" style="border-radius: 5px;">
+            <div class="rounded-lg bg-white ml-4 mt-14" style="border-radius: 5px;">
                 <div id="calendar" class="p-6"></div>
             </div>
         </div>
@@ -126,7 +126,7 @@
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'timeGridWeek',
             slotMinTime: '8:00:00',
-            slotMaxTime: '23:00:00',
+            slotMaxTime: '21:00:00',
             events: @json($events),
         });
         calendar.render();

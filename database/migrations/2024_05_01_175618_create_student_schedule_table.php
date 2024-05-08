@@ -17,9 +17,11 @@ return new class extends Migration
             $table->id();
             $table->string('user_id');
             // $table->string('course_year')->nullable();
-            // $table->string('semester');
+            $table->string('semester');
+            $table->string('year');
             // $table->string('course_id');
             $table->string('appointment_id');
+            $table->string('status')->default(0);
             $table->timestamps();
         });
     }
