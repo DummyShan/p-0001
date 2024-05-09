@@ -90,7 +90,7 @@
                     </div>
                     <div class="mb-2">
                         <p class="text-white">Units:</p>
-                        <input type="number" name="unit" class="w-full bg-white rounded-lg" placeholder="">
+                        <input type="text" name="unit" class="w-full bg-white rounded-lg" placeholder="">
                     </div>
                     <div class="mb-2">
                         <p class="text-white">Days:</p>
@@ -263,15 +263,15 @@
                                             <div class="flex flex-row">
                                                 <div class="basis-1/2 pr-2">
                                                     <div class="mb-5">
-                                                        <p class="text-white">Unit:</p>
-                                                        <input type="text" id="c_unit" name="unit"
+                                                        <p class="text-white">Time Start:</p>
+                                                        <input type="time" id="t_start" name="time_start"
                                                             class="w-full bg-white rounded-lg" placeholder="">
                                                     </div>
                                                 </div>
                                                 <div class="basis-1/2 pr-2">
                                                     <div class="mb-5">
-                                                        <p class="text-white">Time Start:</p>
-                                                        <input type="text" id="t_start" name="time_start"
+                                                        <p class="text-white">Time End:</p>
+                                                        <input type="time" id="t_end" name="time_end"
                                                             class="w-full bg-white rounded-lg" placeholder="">
                                                     </div>
                                                 </div>
@@ -279,8 +279,8 @@
                                             <div class="flex flex-row">
                                                 <div class="basis-1/2 pr-2">
                                                     <div class="mb-5">
-                                                        <p class="text-white">Time End:</p>
-                                                        <input type="text" id="t_end" name="time_end"
+                                                        <p class="text-white">Unit:</p>
+                                                        <input type="text" id="c_unit" name="unit"
                                                             class="w-full bg-white rounded-lg" placeholder="">
                                                     </div>
                                                 </div>
