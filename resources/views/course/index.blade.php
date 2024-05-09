@@ -75,7 +75,7 @@
                         <input type="text" name="description" class="w-full bg-white rounded-lg" placeholder="">
                     </div>
                     <div class="mb-2">
-                        <label for="status" class="text-white">Staus</label>
+                        <label for="status" class="text-white">Status</label>
                         <select name="status" id="status" class="rounded w-full mb-2">
                             <option>
                                 Select
@@ -94,7 +94,8 @@
                     </div>
                     <div class="mb-2">
                         <p class="text-white">Days:</p>
-                        <input type="text" name="day" id="daysInput" class="w-full bg-white rounded-lg" placeholder="Enter days (e.g., Monday, Tuesday)">
+                        <input type="text" name="day" id="daysInput" class="w-full bg-white rounded-lg"
+                            placeholder="Enter days (e.g., Monday, Tuesday)">
                         {{-- <label for="day" class="text-white">Day</label>
                         <select name="day" id="day" class="rounded w-full mb-2">
                             <option>
@@ -208,10 +209,10 @@
                                 {{-- <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div> --}}
 
                                 <div
-                                    class="modal-container bg-gray-700 w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+                                    class="modal-container bg-gray-700 w-11/12 md:max-w-2xl mx-auto rounded shadow-lg z-50 overflow-y-auto">
 
                                     <!-- Modal content -->
-                                    <div class="modal-content py-4 text-left px-6">
+                                    <div class="modal-content py-4 w-full text-left px-6">
                                         <!-- Title -->
                                         <div class="flex justify-between items-center pb-3">
                                             <p class="text-2xl font-bold text-white">Edit</p>
@@ -226,56 +227,97 @@
                                         <!-- Body -->
                                         <form action="{{ route('course.update') }}" method="POST">
                                             @csrf
-                                            <div class="mt-10 mb-5">
+                                            <div class="flex flex-row">
                                                 <input type="hidden" name="id" id="c_id">
-                                                <p class="text-white">Course:</p>
-                                                <input type="text" id="c_type" name="type"
-                                                    class="w-full bg-white rounded-lg" placeholder="">
+                                                <div class="basis-1/2 pr-2">
+                                                    <div class="mb-5">
+                                                        <p class="text-white">Course:</p>
+                                                        <input type="text" id="c_type" name="type"
+                                                            class="w-full bg-white rounded-lg" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="basis-1/2 pr-2">
+                                                    <div class="mb-5">
+                                                        <p class="text-white">Subject:</p>
+                                                        <input type="text" id="c_subject" name="subject"
+                                                            class="w-full bg-white rounded-lg" placeholder="">
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="mb-5">
-                                                <p class="text-white">Subject:</p>
-                                                <input type="text" id="c_subject" name="subject"
-                                                    class="w-full bg-white rounded-lg" placeholder="">
+                                            <div class="flex flex-row">
+                                                <div class="basis-1/2 pr-2">
+                                                    <div class="mb-5">
+                                                        <p class="text-white">Subject Code:</p>
+                                                        <input type="text" id="c_code" name="subjectCode"
+                                                            class="w-full bg-white rounded-lg" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="basis-1/2 pr-2">
+                                                    <div class="mb-5">
+                                                        <p class="text-white">Block:</p>
+                                                        <input type="text" id="c_block" name="block"
+                                                            class="w-full bg-white rounded-lg" placeholder="">
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="mb-5">
-                                                <p class="text-white">Subject Code:</p>
-                                                <input type="text" id="c_code" name="subjectCode"
-                                                    class="w-full bg-white rounded-lg" placeholder="">
+                                            <div class="flex flex-row">
+                                                <div class="basis-1/2 pr-2">
+                                                    <div class="mb-5">
+                                                        <p class="text-white">Unit:</p>
+                                                        <input type="text" id="c_unit" name="unit"
+                                                            class="w-full bg-white rounded-lg" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="basis-1/2 pr-2">
+                                                    <div class="mb-5">
+                                                        <p class="text-white">Time Start:</p>
+                                                        <input type="text" id="t_start" name="time_start"
+                                                            class="w-full bg-white rounded-lg" placeholder="">
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="mb-5">
-                                                <p class="text-white">Block:</p>
-                                                <input type="text" id="c_block" name="block"
-                                                    class="w-full bg-white rounded-lg" placeholder="">
+                                            <div class="flex flex-row">
+                                                <div class="basis-1/2 pr-2">
+                                                    <div class="mb-5">
+                                                        <p class="text-white">Time End:</p>
+                                                        <input type="text" id="t_end" name="time_end"
+                                                            class="w-full bg-white rounded-lg" placeholder="">
+                                                    </div>
+                                                </div>
+                                                <div class="basis-1/2 pr-2">
+                                                    <div class="mb-5">
+                                                        {{-- <p class="text-white">Status:</p>
+                                                        <input type="text" id="c_status" name="status"
+                                                            class="w-full bg-white rounded-lg" placeholder=""> --}}
+                                                        <label for="status" class="text-white">Status</label>
+                                                        <select name="status" id="c_status"
+                                                            class="rounded w-full mb-2">
+                                                            <option>
+                                                                Select
+                                                            </option>
+                                                            <option value="available">
+                                                                Available
+                                                            </option>
+                                                            <option value="N/A">
+                                                                N/A
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="mb-5">
-                                                <p class="text-white">Unit:</p>
-                                                <input type="text" id="c_unit" name="unit"
-                                                    class="w-full bg-white rounded-lg" placeholder="">
-                                            </div>
-                                            <div class="mb-5">
-                                                <p class="text-white">Time Start:</p>
-                                                <input type="text" id="t_start" name="time_start"
-                                                    class="w-full bg-white rounded-lg" placeholder="">
-                                            </div>
-                                            <div class="mb-5">
-                                                <p class="text-white">Time End:</p>
-                                                <input type="text" id="t_end" name="time_end"
-                                                    class="w-full bg-white rounded-lg" placeholder="">
-                                            </div>
-                                            <div class="mb-5">
-                                                <p class="text-white">Status:</p>
-                                                <input type="text" id="c_status" name="status"
-                                                    class="w-full bg-white rounded-lg" placeholder="">
-                                            </div>
-                                            <div class="mb-5">
-                                                <p class="text-white">Description:</p>
-                                                <input type="text" id="c_desc" name="description"
-                                                    class="w-full bg-white rounded-lg" placeholder="">
+                                            <div class="flex flex-row">
+                                                <div class="basis-1/2 pr-2">
+                                                    <div class="mb-5">
+                                                        <p class="text-white">Description:</p>
+                                                        <input type="text" id="c_desc" name="description"
+                                                            class="w-full bg-white rounded-lg" placeholder="">
+                                                    </div>
+                                                </div>
                                             </div>
                                             <!-- Footer -->
                                             <div class="mt-4 flex justify-end">
                                                 <button type="reset"
-                                                    class="px-4 bg-transparent p-3 rounded-lg text-indigo-500 hover:bg-gray-100 hover:text-indigo-400 mr-2"
+                                                    class="px-4 bg-transparent p-3 rounded-lg text-white hover:bg-gray-100 hover:text-red-400 mr-2"
                                                     onclick="closeModal()">Cancel</button>
                                                 <button type="submit"
                                                     class="modal-close px-4 bg-gray-500 p-3 rounded-lg text-white hover:bg-gray-400">Save</button>
@@ -353,7 +395,15 @@
             document.getElementById('c_unit').setAttribute('value', unit);
             document.getElementById('t_start').setAttribute('value', t_start);
             document.getElementById('t_end').setAttribute('value', t_end);
-            document.getElementById('c_status').setAttribute('value', status);
+            // document.getElementById('c_status').setAttribute('value', status);
+            var options = document.getElementById('c_status').options;
+            for (var i = 0; i < options.length; i++) {
+                if (options[i].value === status) {
+                    options[i].setAttribute('selected', 'selected');
+                } else {
+                    options[i].removeAttribute('selected');
+                }
+            }
             document.getElementById('c_desc').setAttribute('value', des);
         }
 
