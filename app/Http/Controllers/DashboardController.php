@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\NewPostAdded;
 use App\Models\Appointment;
+use App\Models\Course;
 use App\Models\Post;
 use App\Models\Schedule;
 use App\Models\Station;
@@ -71,17 +72,6 @@ class DashboardController extends Controller
             }
         }
         $instructorCount = count($appointments);
-        // $instructorScheds = Appointment::where('user_id', Auth::user()->id)->get();
-
-        // $schedules = Schedule::join('appointments', 'schedules.appointment_id', '=', 'appointments.id')
-        //     ->join('users', 'schedules.user_id', '=', 'users.id')
-        //     ->join('courses', 'appointments.course_id', '=', 'courses.id')
-        //     ->where('schedules.user_id', '=', Auth::user()->id)
-        //     // ->where('schedules.semester', '=', '1st')
-        //     // ->where('schedules.semester', 'LIKE', "%" . $request->semester . "%")
-        //     // ->where('courses.year', '1')
-        //     // ->where('courses.year', 'LIKE', "%" . $request->year . "%")
-        //     ->get();
         $units = Schedule::select('courses.unit as unit')->join('appointments', 'schedules.appointment_id', '=', 'appointments.id')
             ->join('courses', 'appointments.course_id', '=', 'courses.id')
             ->where('schedules.user_id', Auth::user()->id)
@@ -92,7 +82,14 @@ class DashboardController extends Controller
             $counts = $counts + $unit->unit;
         }
 
-        return view('dashboard', compact('events', 'instructorCount', 'appointments', 'counts'));
+        $roomsScheds = Course::join('rooms', 'courses.room_id', '=', 'rooms.id')->get();
+
+        $students = Schedule::join('users', 'schedules.user_id', '=', 'users.id')->get();
+
+        $instructors = Appointment::with(['user'])->get();
+        // dd($instructors);
+
+        return view('dashboard', compact('events', 'instructorCount', 'appointments', 'counts', 'roomsScheds', 'students', 'instructors'));
     }
 
     /**

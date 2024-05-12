@@ -68,7 +68,7 @@
                 <a href="/student-view" class="flex-1 mr-10 bg-gray-800 rounded-lg shadow-xl">
                     <div class="p-4 h-48">
                         <h4 class="text-white text-2xl mb-4">{{ Auth::user()->name }}</h4>
-                        <p class="text-white">Total Unit: {{$counts}}</p>
+                        <p class="text-white">Total Unit: {{ $counts }}</p>
                     </div>
                 </a>
                 <div class="flex-1 bg-white rounded-lg flex items-center justify-center shadow-xl hover:shadow-2xl">
@@ -131,6 +131,55 @@
             </div>
         </div>
     @endcan
+    @can('super_access')
+        <div class="flex flex-row">
+            <div class="basis-2/3 w-full">
+                <div class="m-4 rounded shadow-xl bg-white">
+                    <div class="p-4 font-bold border-b-4 border-black">
+                        Rooms & Section
+                    </div>
+                </div>
+                <div class="m-4 rounded h-96 shadow-xl bg-gray-600 hover:shadow-2xl max-h-96 overflow-y-auto">
+                    @foreach ($roomsScheds as $roomSched)
+                        <div
+                            class="p-2 pt-4 pb-4 mb-2 mt-2 w-full bg-gray-700 shadow-xl hover:shadow-2xl text-white text-sm hover:bg-gray-800 border-b border-black">
+                            {{ $roomSched->name . ' - ' . $roomSched->time_start . ' - ' . $roomSched->time_end . ' | ' . $roomSched->day }}
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            <div class="basis-2/3 w-full">
+                <div class="m-4 rounded shadow-xl bg-white">
+                    <div class="p-4 font-bold border-b-4 border-black">
+                        Students
+                    </div>
+                </div>
+                <div class="m-4 rounded h-96 shadow-xl bg-gray-600 hover:shadow-2xl max-h-96 overflow-y-auto">
+                    @foreach ($students as $student)
+                        <div onclick="showStudentCalendar({{$student->user_id}})"
+                            class="p-2 pt-4 pb-4 mb-2 mt-2 w-full bg-gray-700 shadow-xl hover:shadow-2xl text-white text-sm hover:bg-gray-800 border-b border-black">
+                            {{ $student->name . ' - ' . $student->semester . ' Semester - ' . $student->year . ' Year' }}
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+            <div class="basis-2/3 w-full">
+                <div class="m-4 rounded shadow-xl bg-white">
+                    <div class="p-4 font-bold border-b-4 border-black">
+                        Instructors
+                    </div>
+                </div>
+                <div class="m-4 rounded h-96 shadow-xl bg-gray-600 hover:shadow-2xl max-h-96 overflow-y-auto">
+                    @foreach ($instructors as $instructor)
+                        <div onclick="showInstructorCalendar({{$instructor->user_id}})"
+                            class="p-2 pt-4 pb-4 mb-2 mt-2 w-full bg-gray-700 shadow-xl hover:shadow-2xl text-white text-sm hover:bg-gray-800 border-b border-black">
+                            {{ $instructor->user->name }}
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    @endcan
 </x-app-layout>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -144,6 +193,42 @@
         });
         calendar.render();
     });
+
+    function showStudentCalendar(id) {
+        $.ajax({
+            type: 'GET',
+            url: 'student-schedule',
+            data: {
+                _token: '{{ csrf_token() }}',
+                user_id: id,
+            },
+            success: function(data) {
+                window.location.href = 'student-schedule';
+            },
+            error: function(xhr) {
+                // Handle the error response, if needed
+                console.log(xhr);
+            }
+        });
+    }
+
+    function showInstructorCalendar(id) {
+        $.ajax({
+            type: 'GET',
+            url: 'instructor-schedule',
+            data: {
+                _token: '{{ csrf_token() }}',
+                user_id: id,
+            },
+            success: function(data) {
+                window.location.href = 'instructor-schedule';
+            },
+            error: function(xhr) {
+                // Handle the error response, if needed
+                console.log(xhr);
+            }
+        });
+    }
 
     function selectSemester(semester) {
         console.log(true)

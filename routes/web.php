@@ -59,6 +59,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('block-schedule', [\App\Http\Controllers\ScheduleController::class, 'blockSchedule'])->name('block.schedule');
 
+    Route::get('student-schedule', [\App\Http\Controllers\ScheduleController::class, 'studentSchedule'])->name('student.schedule');
+
+    Route::get('instructor-schedule', [\App\Http\Controllers\ScheduleController::class, 'instructorSchedule'])->name('instructor.schedule');
+
     Route::get('student-view', [\App\Http\Controllers\FacultyController::class, 'viewSchedule'])->name('student.view');
 
     Route::post('appointment', [\App\Http\Controllers\AppointmentController::class, 'store'])->name('appointment.store');

@@ -120,6 +120,45 @@ class ScheduleController extends Controller
         return view('block.index', compact('events'));
     }
 
+    public function studentSchedule(Request $request)
+    {
+        $events = [];
+        $studentSchedules = [];
+        $studentSchedules = Schedule::join('users', 'schedules.user_id', '=', 'users.id')
+        ->join('appointments', 'schedules.appointment_id', 'schedules.id')
+            ->join('courses', 'appointments.course_id', '=', 'courses.id')
+            ->where('schedules.user_id', 'LIKE', "%" . $request->user_id . "%")->get();
+
+        foreach ($studentSchedules as $studentSchedule) {
+            $events[] = [
+                'title' => $studentSchedule->subject.' '.$studentSchedule->subjectCode,
+                'start' => $studentSchedule->month_start . '-05' . ' ' . $studentSchedule->time_start . ':00',
+                'end' => $studentSchedule->month_end . '-05' . ' ' . $studentSchedule->time_end . ':00',
+                'description' => 'html: <b>' . $studentSchedule->description . '</b>',
+            ];
+        }
+        dd($events);
+        return view('block.student.index', compact('events'));
+    }
+
+    public function instructorSchedule(Request $request)
+    {
+        $events = [];
+        $instructorSchedules = [];
+        $instructorSchedules = Appointment::join('courses', 'appointments.course_id', '=', 'courses.id')
+            ->where('appointments.user_id', 'LIKE', "%" . $request->user_id . "%")->get();
+
+        foreach ($instructorSchedules as $instructorSchedule) {
+            $events[] = [
+                'title' => $instructorSchedule->subject.' '.$instructorSchedule->subjectCode,
+                'start' => $instructorSchedule->month_start . '-05' . ' ' . $instructorSchedule->time_start . ':00',
+                'end' => $instructorSchedule->month_end . '-05' . ' ' . $instructorSchedule->time_end . ':00',
+                'description' => 'html: <b>' . $instructorSchedule->description . '</b>',
+            ];
+        }
+        return view('block.instructor.index', compact('events'));
+    }
+
     /**
      * Display the specified resource.
      *
