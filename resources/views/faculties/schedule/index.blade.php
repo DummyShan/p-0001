@@ -44,7 +44,7 @@
                                                 Select
                                             </option>
                                             @foreach ($users as $user)
-                                                <option value="{{ $user->user_id }} {{ request()->query('year') == $user->user_id ? 'selected' : '' }}">
+                                                <option value="{{ $user->id }}">
                                                     {{ $user->name }}
                                                 </option>
                                             @endforeach
