@@ -86,7 +86,7 @@ class DashboardController extends Controller
 
         $students = Schedule::join('users', 'schedules.user_id', '=', 'users.id')->get();
 
-        $instructors = Appointment::with(['user'])->get();
+        $instructors = Appointment::join('users', 'appointments.user_id', '=', 'users.id')->get();
         // dd($instructors);
 
         return view('dashboard', compact('events', 'instructorCount', 'appointments', 'counts', 'roomsScheds', 'students', 'instructors'));
