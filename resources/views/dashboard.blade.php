@@ -173,7 +173,7 @@
                     @foreach ($instructors as $instructor)
                         <div onclick="showInstructorCalendar({{$instructor->user_id}})"
                             class="p-2 pt-4 pb-4 mb-2 mt-2 w-full bg-gray-700 shadow-xl hover:shadow-2xl text-white text-sm hover:bg-gray-800 border-b border-black">
-                            {{ $instructor->name }}
+                            {{ $instructor->user->name }}
                         </div>
                     @endforeach
                 </div>

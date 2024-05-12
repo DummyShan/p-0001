@@ -137,7 +137,7 @@ class ScheduleController extends Controller
                 'description' => 'html: <b>' . $studentSchedule->description . '</b>',
             ];
         }
-        dd($events);
+        // dd($events);
         return view('block.student.index', compact('events'));
     }
 
