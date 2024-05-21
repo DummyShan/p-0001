@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateScheduleRequest;
 use App\Models\Appointment;
 use App\Models\Course;
+use App\Models\Faculty;
+use App\Models\Rooms;
 use App\Models\Schedule;
 use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ScheduleController extends Controller
 {
@@ -54,17 +57,14 @@ class ScheduleController extends Controller
     public function addSchedule(Request $request)
     {
         try {
-            $check = Schedule::where('appointment_id', $request->id)
+            $check = Schedule::where('appointment_id', $request->appointment_id)
                 ->where('user_id', Auth::user()->id)->first();
             if ($check != '') {
                 redirect(route("subject"))->with('success', 'Subject Already Exist!');
             } else {
-                $appointment = Appointment::where('id', $request->id)->first();
                 $add = new Schedule();
                 $add->user_id = Auth::user()->id;
-                $add->year = $request->year;
-                $add->semester = $request->semester;
-                $add->appointment_id = $appointment->id;
+                $add->appointment_id = $request->appointment_id;
                 $add->save();
 
                 redirect(route("subject"))->with('success', 'Created Successfully');
@@ -77,28 +77,74 @@ class ScheduleController extends Controller
 
     public function subject(Request $request)
     {
-        $subjects = Appointment::select('appointments.id as id', 'courses.subjectCode as code', 'courses.time_start as start', 'courses.time_end as finish', 'courses.description as description', 'courses.type as type')
-            ->join('courses', 'appointments.course_id', '=', 'courses.id')
-            ->join('rooms', 'courses.room_id', '=', 'rooms.id')
-            ->join('users', 'appointments.user_id', '=', 'users.id')
-            ->where('courses.type', 'LIKE', "%" . $request->type . "%")
-            // ->where('courses.year', 'LIKE', "%" . $request->year . "%")
-            // ->where('courses.year', 'LIKE', "%" . $request->search . "%")
-            ->get();
-            // dd($subjects);
-        $courses = Course::get();
-        if($request->type){
-            $courses = Course::where('courses.type', 'LIKE', "%" . $request->type . "%")->get();
-        }
-        $instructor = null;
+        // $subjects = Appointment::select('appointments.id as id', 'courses.subjectCode as code', 'courses.time_start as start', 'courses.time_end as finish', 'courses.description as description', 'courses.type as type')
+        //     ->join('courses', 'appointments.course_id', '=', 'courses.id')
+        //     ->join('rooms', 'courses.room_id', '=', 'rooms.id')
+        //     ->join('users', 'appointments.user_id', '=', 'users.id')
+        //     ->where('courses.type', 'LIKE', "%" . $request->type . "%")
+        //     // ->where('courses.year', 'LIKE', "%" . $request->year . "%")
+        //     // ->where('courses.year', 'LIKE', "%" . $request->search . "%")
+        //     ->get();
+        //     // dd($subjects);
+        // $courses = Course::get();
+        // if($request->type){
+        //     $courses = Course::where('courses.type', 'LIKE', "%" . $request->type . "%")->get();
+        // }
+        // $instructor = null;
+        // if ($request->search) {
+        //     $instructor = Appointment::select('users.name as name', 'courses.day as day', 'courses.status as status', 'rooms.name as roomName')->join('users', 'appointments.user_id', '=', 'users.id')
+        //         ->join('courses', 'appointments.course_id', 'courses.id')
+        //         ->join('rooms', 'courses.room_id', 'rooms.id')
+        //         ->where('appointments.id', $request->search)
+        //         ->first();
+        // }
+        abort_unless(Gate::allows('super_access'), 403);
+        $lists = Faculty::where('name', 'LIKE', "%" . $request->search . "%")->orderBy("created_at", "desc")->get();
+        $events = [];
+        $appointments = [];
         if ($request->search) {
-            $instructor = Appointment::select('users.name as name', 'courses.day as day', 'courses.status as status', 'rooms.name as roomName')->join('users', 'appointments.user_id', '=', 'users.id')
-                ->join('courses', 'appointments.course_id', 'courses.id')
-                ->join('rooms', 'courses.room_id', 'rooms.id')
-                ->where('appointments.id', $request->search)
-                ->first();
+            $appointments = Appointment::with(['user'])
+                ->join('courses', 'appointments.course_id', '=', 'courses.id')
+                ->where('appointments.user_id', 'LIKE', "%" . $request->search . "%")->get();
+            // dd($appointments);
         }
-        return view('student.subject.index', compact('subjects', 'courses', 'instructor'));
+        for ($day = 1; $day <= 31; $day++) {
+            // Loop through each appointment
+            foreach ($appointments as $appointment) {
+                // Split the days string into an array of individual days
+                $selectedDays = explode(',', $appointment->day);
+
+                // Loop through each selected day
+                foreach ($selectedDays as $selectedDay) {
+                    // Extract start date and time from the appointment
+                    $startDateTime = $appointment->month_start . '-' . $day . ' ' . $appointment->time_start . ':00';
+
+                    // Extract end date and time from the appointment
+                    $endDateTime = $appointment->month_end . '-' . $day . ' ' . $appointment->time_end . ':00';
+
+                    // Check if the appointment falls on the selected day
+                    if (date('l', strtotime($startDateTime)) == $selectedDay) {
+                        // Add the event to the events array
+                        $events[] = [
+                            'title' => $appointment->user_id,
+                            'start' => $startDateTime,
+                            'end' => $endDateTime,
+                            'description' => 'html: <b>' . $appointment->description . '</b>',
+                        ];
+                    }
+                }
+            }
+        }
+        $users = User::select('users.id as id', 'users.name as name')->where('email_verified_at', '!=', null)
+            ->join('role_user', 'users.id', '=', 'role_user.user_id')
+            ->join('roles', 'role_user.role_id', '=', 'roles.id')
+            ->where('roles.title', '=', 'Student')
+            ->get();
+
+            // dd($users);
+        $rooms = Rooms::all();
+        $courses = Course::get();
+        return view('student.index', compact('lists', 'events', 'users', 'rooms', 'courses'));
     }
 
     public function blockSchedule(Request $request)

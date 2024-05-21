@@ -21,7 +21,7 @@
     <div class="flex">
         <div class="w-full">
             <div class="w-2/5 float-left">
-                <p class="text-xl font-bold">Student Schedule</p>
+                <p class="text-xl font-bold">Student Schedules</p>
             </div>
             <div class="w-3/5 float-right">
                 <div x-data="{ isOpen: false }">
@@ -34,7 +34,7 @@
 
                             <!-- Modal content goes here -->
                             <p class="text-xl font-bold">New Schedule</p>
-                            <form action="{{ route('schedule.store') }}" method="POST">
+                            <form action="{{ route('schedule.add') }}" method="POST">
                                 @csrf
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="p-4">
@@ -44,31 +44,10 @@
                                                 Select
                                             </option>
                                             @foreach ($users as $user)
-                                                <option value="{{ $user->user_id }}">
+                                                <option value="{{ $user->id }}">
                                                     {{ $user->name }}
                                                 </option>
                                             @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="p-4">
-                                        <p class="">Course & Year</p>
-                                        <input type="text" name="course_year" class="w-full bg-white rounded-lg"
-                                            placeholder="">
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="p-4">
-                                        <label for="semester" class="">Semester</label>
-                                        <select name="semester" id="semester" class="rounded w-full mb-2">
-                                            <option>
-                                                Select
-                                            </option>
-                                            <option value="1st">
-                                                1st Semester
-                                            </option>
-                                            <option value="2nd">
-                                                2nd Semester
-                                            </option>
                                         </select>
                                     </div>
                                     <div class="p-4">
@@ -77,43 +56,12 @@
                                             <option>
                                                 Select
                                             </option>
-                                            @foreach ($appointments as $appointment)
-                                                <option value="{{$appointment->course_id}}">
-                                                    {{$appointment->subject}}
+                                            @foreach ($subjects as $subject)
+                                                <option value="{{ $subject->id }}">
+                                                    {{ $subject->subjectCode }}
                                                 </option>
                                             @endforeach
                                         </select>
-                                    </div>
-                                </div>
-                                {{-- <div class="grid grid-cols-2 gap-4">
-                                    <div class="p-4">
-                                        <p class="">Start Month</p>
-                                        <input type="month" name="start_month" class="w-full bg-white rounded-lg"
-                                            placeholder="">
-                                    </div>
-                                    <div class="p-4">
-                                        <p class="">Finish Month</p>
-                                        <input type="month" name="finish_month" class="w-full bg-white rounded-lg"
-                                            placeholder="">
-                                    </div>
-                                </div> --}}
-                                {{-- <div class="grid grid-cols-2 gap-4">
-                                    <div class="p-4">
-                                        <p class="">Start Time</p>
-                                        <input type="time" name="start_time" class="w-full bg-white rounded-lg"
-                                            placeholder="">
-                                    </div>
-                                    <div class="p-4">
-                                        <p class="">Finish Time</p>
-                                        <input type="time" name="finish_time" class="w-full bg-white rounded-lg"
-                                            placeholder="">
-                                    </div>
-                                </div> --}}
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="p-4">
-                                        <p class="">Description</p>
-                                        <input type="text" name="comments" class="w-full bg-white rounded-lg"
-                                            placeholder="">
                                     </div>
                                 </div>
                                 <button type="reset" @click="isOpen = false"
@@ -131,7 +79,7 @@
                         Select
                     </option>
                     @foreach ($users as $user)
-                        <option value="{{ $user->user_id }}">
+                        <option value="{{ $user->id }}">
                             {{ $user->name }}
                         </option>
                     @endforeach

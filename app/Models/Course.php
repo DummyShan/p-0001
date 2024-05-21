@@ -21,5 +21,7 @@ class Course extends Model
         'time_start',
         'time_end',
         'block',
+        'year',
+        'semester',
     ];
 }

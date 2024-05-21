@@ -21,7 +21,7 @@
     <div class="flex">
         <div class="w-full">
             <div class="w-2/5 float-left">
-                <p class="text-xl font-bold">Faculty Schedule</p>
+                <p class="text-xl font-bold">Faculty Schedules</p>
             </div>
             <div class="w-3/5 float-right">
                 <div x-data="{ isOpen: false }">

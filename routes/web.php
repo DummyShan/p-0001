@@ -49,7 +49,7 @@ Route::middleware('auth')->group(function () {
     Route::post('faculty/update', [\App\Http\Controllers\FacultyController::class, 'update'])->name('faculty.update');
     Route::post('faculty/status', [\App\Http\Controllers\FacultyController::class, 'statusUpdate'])->name('faculty.status');
     Route::get('faculty/schedule', [\App\Http\Controllers\FacultyController::class, 'schedule'])->name('faculty.schedule');
-    // Route::get('student/schedule', [\App\Http\Controllers\FacultyController::class, 'studentSchedule'])->name('student.schedule');
+    Route::get('student/schedule', [\App\Http\Controllers\FacultyController::class, 'studentSchedule'])->name('student.schedule');
     Route::delete('faculty/{id}', [\App\Http\Controllers\FacultyController::class, 'destroy'])->name('faculty.delete');
 
 
@@ -59,7 +59,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('block-schedule', [\App\Http\Controllers\ScheduleController::class, 'blockSchedule'])->name('block.schedule');
 
-    Route::get('student-schedule', [\App\Http\Controllers\ScheduleController::class, 'studentSchedule'])->name('student.schedule');
+    // Route::get('student-schedule', [\App\Http\Controllers\ScheduleController::class, 'studentSchedule'])->name('student.schedule');
 
     Route::get('instructor-schedule', [\App\Http\Controllers\ScheduleController::class, 'instructorSchedule'])->name('instructor.schedule');
 

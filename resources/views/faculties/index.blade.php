@@ -97,9 +97,9 @@
                                 <div>
                                     <p class="font-bold">
                                         Status:
-                                        <span onclick="status('{{$list->user_id}}','Part')"
+                                        <span onclick="status('{{$list->id}}','Part')"
                                             class="p-1 text-xs text-white rounded hover:bg-gray-400 bg-gray-600 {{ $list->status == 'Part' ? 'bg-green-600 hover:bg-green-400' : 'bg-gray-600 hover:bg-gray-600' }}">Part</span>
-                                        <span onclick="status('{{$list->user_id}}','Full')"
+                                        <span onclick="status('{{$list->id}}','Full')"
                                             class="p-1 text-xs text-white rounded {{ $list->status == 'Full' ? 'bg-green-600 hover:bg-green-400' : 'bg-gray-600 hover:bg-gray-600' }}">Full</span>
                                     </p>
                                 </div>

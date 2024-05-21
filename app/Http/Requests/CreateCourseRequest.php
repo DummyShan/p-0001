@@ -35,6 +35,8 @@ class CreateCourseRequest extends FormRequest
             'time_start' => 'string',
             'time_end' => 'string',
             'block' => 'string',
+            'year' => 'string',
+            'semester' => 'string',
         ];
     }
 }

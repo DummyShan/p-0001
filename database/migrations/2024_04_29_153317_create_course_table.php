@@ -26,6 +26,8 @@ return new class extends Migration
             $table->string('time_start');
             $table->string('time_end');
             $table->string('block');
+            $table->string('year');
+            $table->string('semester');
             $table->timestamps();
         });
     }

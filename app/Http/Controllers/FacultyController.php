@@ -109,7 +109,7 @@ class FacultyController extends Controller
 
     public function statusUpdate(Request $request)
     {
-        $up = Faculty::where('user_id', $request->id)->first();
+        $up = Faculty::where('id', $request->id)->first();
         $up->status = $request->status;
         $up->update();
 
@@ -186,34 +186,47 @@ class FacultyController extends Controller
     {
         // dd($request->search);
         abort_unless(Gate::allows('super_access'), 403);
-        // $lists = Faculty::where('name', 'LIKE', "%" . $request->search . "%")->orderBy("created_at", "desc")->get();
         $events = [];
-        $appointments = Appointment::with(['user'])->join('courses', 'appointments.course_id', '=', 'courses.id')
-            ->join('users', 'appointments.user_id', '=', 'users.id')
-            ->join('rooms', 'appointments.room_id', '=', 'rooms.id')
-            ->get();
-        $schedules = [];
+        $appointments = [];
         if ($request->search) {
-            $schedules = Schedule::join('appointments', 'schedules.appointment_id', '=', 'appointments.id')
-                ->join('users', 'schedules.user_id', '=', 'users.id')
-                ->where('schedules.user_id', 'LIKE', "%" . $request->search . "%")
-                ->orderBy("appointments.created_at", "desc")
-                ->get();
+            $appointments = Schedule::join('appointments', 'schedules.appointment_id', '=', 'appointments.id')
+            ->join('courses', 'appointments.course_id', '=', 'courses.id')
+            ->where('schedules.user_id', '=', $request->search)->get();
         }
-        foreach ($schedules as $schedule) {
-            $events[] = [
-                'title' => $schedule->name . ' (' . $schedule->course_id . ')',
-                'start' => $schedule->start_time,
-                'end' => $schedule->finish_time,
-                'description' => $schedule->comments,
-            ];
+        for ($day = 1; $day <= 31; $day++) {
+            // Loop through each appointment
+            foreach ($appointments as $appointment) {
+                // Split the days string into an array of individual days
+                $selectedDays = explode(',', $appointment->day);
+
+                // Loop through each selected day
+                foreach ($selectedDays as $selectedDay) {
+                    // Extract start date and time from the appointment
+                    $startDateTime = $appointment->month_start . '-' . $day . ' ' . $appointment->time_start . ':00';
+
+                    // Extract end date and time from the appointment
+                    $endDateTime = $appointment->month_end . '-' . $day . ' ' . $appointment->time_end . ':00';
+
+                    // Check if the appointment falls on the selected day
+                    if (date('l', strtotime($startDateTime)) == $selectedDay) {
+                        // Add the event to the events array
+                        $events[] = [
+                            'title' => $appointment->user_id,
+                            'start' => $startDateTime,
+                            'end' => $endDateTime,
+                            'description' => 'html: <b>' . $appointment->description . '</b>',
+                        ];
+                    }
+                }
+            }
         }
-        $users = User::where('email_verified_at', '!=', null)
+        $users = User::select('users.id as id', 'users.name as name')->where('email_verified_at', '!=', null)
             ->join('role_user', 'users.id', '=', 'role_user.user_id')
             ->join('roles', 'role_user.role_id', '=', 'roles.id')
             ->where('roles.title', '=', 'Student')
             ->get();
-        return view('student.schedule.index', compact('events', 'users', 'appointments'));
+        $subjects = Appointment::join('courses', 'appointments.course_id', '=', 'courses.id')->get();
+        return view('student.schedule.index', compact('events', 'users', 'subjects'));
     }
 
     public function viewSchedule()

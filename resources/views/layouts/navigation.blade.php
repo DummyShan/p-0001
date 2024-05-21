@@ -105,37 +105,16 @@
             </x-nav-link>
         @endcan --}}
 
-        {{-- @can('super_access')
+        @can('super_access')
             <x-nav-link href="{{ route('student.schedule') }}" :active="request()->routeIs('student.schedule')">
                 <x-slot name="icon">
-                    <svg class="h-6 w-6 text-white" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" />
-                        <path
-                            d="M16 6h3a1 1 0 0 1 1 1v11a2 2 0 0 1 -4 0v-13a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1v12a3 3 0 0 0 3 3h11" />
-                        <line x1="8" y1="8" x2="12" y2="8" />
-                        <line x1="8" y1="12" x2="12" y2="12" />
-                        <line x1="8" y1="16" x2="12" y2="16" />
+                    <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
+
                 </x-slot>
                 {{ __('Student Schedule') }}
-            </x-nav-link>
-        @endcan --}}
-
-        @can('user_access')
-            <x-nav-link href="{{ route('subject') }}" :active="request()->routeIs('subject')">
-                <x-slot name="icon">
-                    <svg class="h-6 w-6 text-white" width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" />
-                        <path
-                            d="M16 6h3a1 1 0 0 1 1 1v11a2 2 0 0 1 -4 0v-13a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1v12a3 3 0 0 0 3 3h11" />
-                        <line x1="8" y1="8" x2="12" y2="8" />
-                        <line x1="8" y1="12" x2="12" y2="12" />
-                        <line x1="8" y1="16" x2="12" y2="16" />
-                    </svg>
-                </x-slot>
-                {{ __('Subjects') }}
             </x-nav-link>
         @endcan
 

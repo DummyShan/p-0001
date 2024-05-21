@@ -49,13 +49,25 @@
                         <p class="text-white">Year:</p>
                         <input type="number" name="year" class="w-full bg-white rounded-lg" placeholder="">
                     </div> --}}
-                    <div class="mb-2">
-                        <p class="text-white">Subject:</p>
-                        <input type="text" name="subject" class="w-full bg-white rounded-lg" placeholder="">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="mb-2">
+                            <p class="text-white">Subject:</p>
+                            <input type="text" name="subject" class="w-full bg-white rounded-lg" placeholder="">
+                        </div>
+                        <div class="mb-2">
+                            <p class="text-white">Year:</p>
+                            <input type="text" name="year" class="w-full bg-white rounded-lg" placeholder="">
+                        </div>
                     </div>
-                    <div class="mb-2">
-                        <p class="text-white">Subject Code:</p>
-                        <input type="text" name="subjectCode" class="w-full bg-white rounded-lg" placeholder="">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="mb-2">
+                            <p class="text-white">Subject Code:</p>
+                            <input type="text" name="subjectCode" class="w-full bg-white rounded-lg" placeholder="">
+                        </div>
+                        <div class="mb-2">
+                            <p class="text-white">Semester:</p>
+                            <input type="text" name="semester" class="w-full bg-white rounded-lg" placeholder="">
+                        </div>
                     </div>
                     <div class="mb-2">
                         <label for="room_id" class="text-white">Room</label>

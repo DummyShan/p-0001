@@ -23,8 +23,8 @@ class CourseController extends Controller
         $lists = Course::join('rooms', 'courses.room_id', '=', 'rooms.id')->where('subject', 'LIKE', "%" . $request->search . "%")->get();
         $rooms = Rooms::get();
         $appointments = Appointment::join('courses', 'appointments.course_id', '=', 'courses.id')
-        ->join('users', 'appointments.user_id', '=', 'users.id')
-        ->join('rooms', 'courses.room_id', '=', 'rooms.id')->get();
+            ->join('users', 'appointments.user_id', '=', 'users.id')
+            ->join('rooms', 'courses.room_id', '=', 'rooms.id')->get();
         return view('course.index', compact('lists', 'rooms', 'appointments'));
     }
 
@@ -95,6 +95,8 @@ class CourseController extends Controller
             $cor->status = $request->status;
             $cor->unit = $request->unit;
             // $cor->day = $request->day;
+            $cor->year = $request->year;
+            $cor->semester = $request->semester;
             $cor->time_start = $request->time_start;
             $cor->time_end = $request->time_end;
             $cor->block = $request->block;

@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        {{ __('Student') }}
+        {{ __('Student Schedule') }}
     </x-slot>
     @if (session()->has('success'))
         <div class="alert alert-success">
@@ -19,83 +19,98 @@
         </div>
     @endif
     <div class="flex">
-        <div class="w-2/5">
-            <div class="bg-gray-800 p-4 rounded-lg h-500">
-                <form action="{{ route('student.store') }}" method="POST">
-                    @csrf
-                    <p class="text-white text-2xl">Student Form</p>
-                    <div class="mt-10 mb-5">
-                        <label for="user_id" class="text-white">Student</label>
-                        <select name="user_id" id="user_id" class="rounded w-full">
-                            <option>
-                                Select
-                            </option>
-                            @foreach ($users as $user)
-                                <option value="{{$user->id}}">
-                                    {{ $user->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mt-5 mb-5">
-                        <p class="text-white">ID No.:</p>
-                        <input type="text" name="idNo" class="w-full bg-white rounded-lg" placeholder="">
-                    </div>
-                    <div class="mt-5 mb-5">
-                        <p class="text-white">Email:</p>
-                        <input type="email" name="email" class="w-full bg-white rounded-lg" placeholder="">
-                    </div>
-                    <div class="mt-5 mb-5">
-                        <p class="text-white">Contact:</p>
-                        <input type="number" name="contact" class="w-full bg-white rounded-lg" placeholder="">
-                    </div>
-                    <div class="mt-4">
-                        <button type="submit"
-                            class="bg-blue-500 text-white px-4 py-2 rounded-md mr-4 w-1/5">Save</button>
-                        <button type="reset"
-                            class="px-4 py-2 rounded-md w-1/5 text-white hover:bg-red-800">Cancel</button>
-                    </div>
-                </form>
+        <div class="w-full">
+            <div class="w-2/5 float-left">
+                <p class="text-xl font-bold">Student Schedule</p>
             </div>
-        </div>
-        <div class="w-3/5 ml-4">
-            <div class="bg-gray-800 p-4 rounded-lg ml-10">
-                <p class="text-white text-2xl">Student List</p>
-                <div class="mt-10">
-                    <form action="{{ route('student.index') }}" method="GET">
-                        <div class="flex items-center bg-white rounded-lg p-2">
-                            @csrf
-                            <button type="submit">
-                                <svg class="h-6 w-6 text-blue-500 hover:text-blue-800" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <circle cx="11" cy="11" r="8" />
-                                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                                </svg>
-                            </button>
-                            <input type="search" name="search"
-                                class="w-full bg-transparent focus:outline-none mx-2 rounded-lg" placeholder="Search">
+            <div class="w-3/5 float-right">
+                <div x-data="{ isOpen: false }">
+                    <button type="button" @click="isOpen = true"
+                        class="bg-blue-500 text-white px-4 py-2 rounded-md mr-4 w-1/5 float-right">NEW</button>
+                    <div x-show="isOpen"
+                        class="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
+                        <!-- Modal content -->
+                        <div class="bg-white p-8 rounded shadow-md w-3/4">
+
+                            <!-- Modal content goes here -->
+                            <p class="text-xl font-bold">New Schedule</p>
+                            <form action="{{ route('appointment.store') }}" method="POST">
+                                @csrf
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="p-4">
+                                        <label for="user_id" class="">Faculty</label>
+                                        <select name="user_id" id="user_id" class="rounded w-full mb-2">
+                                            <option>
+                                                Select
+                                            </option>
+                                            @foreach ($users as $user)
+                                                <option value="{{ $user->id }}">
+                                                    {{ $user->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="p-4">
+                                        <label for="course_id" class="">Subject</label>
+                                        <select name="course_id" id="course_id" class="rounded w-full mb-2">
+                                            <option>
+                                                Select
+                                            </option>
+                                            @foreach ($courses as $course)
+                                                <option value="{{ $course->id }}">
+                                                    {{ $course->subject }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="p-4">
+                                        <p class="">Month Start</p>
+                                        <input type="month" name="month_start" class="w-full bg-white rounded-lg"
+                                            placeholder="">
+                                    </div>
+                                    <div class="p-4">
+                                        <p class="">Month End</p>
+                                        <input type="month" name="month_end" class="w-full bg-white rounded-lg"
+                                            placeholder="">
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    {{-- <div class="p-4">
+                                        <p class="">Semester</p>
+                                        <input type="number" name="semester" class="w-full bg-white rounded-lg"
+                                            placeholder="">
+                                    </div> --}}
+                                    <div class="p-4">
+                                        <p class="">Description</p>
+                                        <input type="text" name="description" class="w-full bg-white rounded-lg"
+                                            placeholder="">
+                                    </div>
+                                </div>
+                                <button type="reset" @click="isOpen = false"
+                                    class="float-right px-4 py-2 rounded-md border w-1/5 text-black hover:bg-red-800 hover:text-white">Cancel</button>
+                                <button type="submit"
+                                    class="float-right bg-blue-500 hover:bg-blue-800 text-white px-4 py-2 rounded-md mr-4 w-1/5">Save</button>
+                            </form>
                         </div>
-                    </form>
+                    </div>
                 </div>
-                <div class="overflow-y-auto">
-                    @foreach ($lists as $list)
-                        <div class="bg-white rounded-lg p-4 mt-4">
-                            <div>
-                                <p class="font-bold">Name: {{ $list->name }}</p>
-                            </div>
-                            <div>
-                                <p class="font-bold">ID No.: {{ $list->idNo }}</p>
-                            </div>
-                            <div>
-                                <p class="font-bold">Email: {{ $list->email }}</p>
-                            </div>
-                            <div>
-                                <p class="font-bold">Contact: {{ $list->contact }}</p>
-                            </div>
-                        </div>
+            </div>
+            <div class="text-center">
+                <select onchange="selectUser(this.value)" name="type" id="type" class="rounded w-1/2 mb-2">
+                    <option>
+                        Select
+                    </option>
+                    @foreach ($users as $user)
+                        <option value="{{ $user->id }}">
+                            {{ $user->name }}
+                        </option>
                     @endforeach
-                </div>
+                </select>
+            </div>
+            <div class="rounded-lg bg-white ml-4 mt-14" style="border-radius: 5px;">
+                <div id="calendar" class="p-6"></div>
             </div>
         </div>
     </div>
@@ -105,3 +120,33 @@
     <script type="text/javascript"></script>
 
 </x-app-layout>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',
+            slotMinTime: '8:00:00',
+            slotMaxTime: '21:00:00',
+            events: @json($events),
+        });
+        calendar.render();
+    });
+
+    function selectUser(id) {
+        $.ajax({
+            type: 'GET',
+            url: 'schedule',
+            data: {
+                _token: '{{ csrf_token() }}',
+                search: id,
+            },
+            success: function(data) {
+                window.location.href = "schedule?_token={{ csrf_token() }}&search=" + id
+            },
+            error: function(xhr) {
+                // Handle the error response, if needed
+                console.log(xhr);
+            }
+        });
+    }
+</script>

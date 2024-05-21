@@ -44,37 +44,35 @@
         </div>
     @endif
     @can('user_access')
-        <div class="flex">
-            <div class="pr-10">
-                <select name="semester" onchange="selectSemester(this.value)"
-                    class="w-32 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    placeholder="Semester">
-                    <option value="1st" {{ request()->query('semester') == '1st' ? 'selected' : '' }}>1st Sem</option>
-                    <option value="2nd" {{ request()->query('semester') == '2nd' ? 'selected' : '' }}>2nd Sem</option>
-                </select>
-            </div>
+        <div class="flex" style="padding-top: 10px; height: 100%;">
+            <div class="w-2/5">
+                <div class="w-full bg-gray-800 rounded-lg p-4">
+                    <p class="text-white text-xl">{{ Auth::user()->name }}</p>
+                    <p class="text-white text-small">1st Semester</p>
+                    <p class="text-white text-small">BSIT</p>
+                    <p class="text-white text-small mt-6">Total Units: {{$counts}}</p>
+                </div>
+                <div class="h-10"></div>
+                <div class="h-1/2 bg-gray-800 rounded-lg">
+                    <p class="text-white p-4">Subject List</p>
+                    <div class=" overflow-y-auto bg-gray-800 rounded-lg">
+                        @foreach ($appointments as $appointment)
+                            <div class="bg-white m-4 rounded-lg p-4 mb-2">
+                                <div>{{ $appointment->type }} {{ $appointment->year }}</div>
+                                <div class="text-xs">{{ $appointment->subject }}</div>
+                                <div class="text-xs">{{ date('g:i A', strtotime($appointment->start)) }} -
+                                    {{ date('g:i A', strtotime($appointment->end)) }}</div>
+                                <div class="text-xs">{{ $appointment->day }}</div>
+                                <div class="text-xs">{{ $appointment->room }}</div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
 
-            <div>
-                <select name="year" onchange="selectYear(this.value)"
-                    class="w-32 rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                    placeholder="School Year">
-                    <option value="1">First Year</option>
-                    <option value="2">Second Year</option>
-                </select>
             </div>
-        </div>
-        <div class="px-20 py-10">
-            <div class="flex flex-row justify-between mb-4">
-                <a href="/student-view" class="flex-1 mr-10 bg-gray-800 rounded-lg shadow-xl">
-                    <div class="p-4 h-48">
-                        <h4 class="text-white text-2xl mb-4">{{ Auth::user()->name }}</h4>
-                        <p class="text-white">Total Unit: {{ $counts }}</p>
-                    </div>
-                </a>
-                <div class="flex-1 bg-white rounded-lg flex items-center justify-center shadow-xl hover:shadow-2xl">
-                    <div class="p-4">
-                        <a href="/subject" class="text-center hover:text-red-700">Click here to produce schedule</a>
-                    </div>
+            <div class="w-3/5 rounded-lg bg-white ml-4 overflow-y-auto" style="border-radius: 5px;">
+                <div class="rounded-lg" style="border-radius: 5px;">
+                    <div id="calendar" class="p-6"></div>
                 </div>
             </div>
         </div>
