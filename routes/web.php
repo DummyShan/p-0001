@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UsersController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -91,4 +92,6 @@ Route::middleware('auth')->group(function () {
             return response($e);
         }
     })->name('store.token');
+
+    Route::resource('/users', UsersController::class);
 });

@@ -118,6 +118,10 @@
             </x-nav-link>
         @endcan
 
+        @can('super_access')
+            <a href="{{ route('users.index') }}">Users</a>
+        @endcan
+
         {{-- @can('super_access')
             <x-nav-link href="{{ route('users.index') }}" :active="request()->routeIs('users.index')">
                 <x-slot name="icon">
